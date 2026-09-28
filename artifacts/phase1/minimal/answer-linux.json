@@ -1,0 +1,26 @@
+{
+  "task_id": "t4-EXAMPLE-eps-beat",
+  "schema_version": "3",
+  "target_type": "classification",
+  "entity_predictions": [
+    {
+      "entity_id": "AAPL",
+      "label": "inline",
+      "point_forecast": 1.5,
+      "interval": {
+        "level": 0.9,
+        "lo": -26498.5,
+        "hi": 26501.5
+      },
+      "claims": [
+        {
+          "doc_id": "EDGAR_0000320193_8K_20240201",
+          "span_start": 0,
+          "span_end": 240,
+          "claim": "Evidence for AAPL: CUPERTINO, California — February 1, 2024 — Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company p"
+        }
+      ]
+    }
+  ],
+  "evidence_trace": "Indexed 2 corpus docs; embargo cutoff 2024-03-15. Lexical retrieval + rule-based EPS classifier. Predicted 1 entit(y/ies)."
+}
