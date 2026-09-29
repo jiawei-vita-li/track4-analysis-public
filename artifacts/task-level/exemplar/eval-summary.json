@@ -1,0 +1,60 @@
+{
+  "answer": "/root/autodl-tmp/t4-phase3-ablation/t4-EXAMPLE-eps-beat/P3-final-safety/answer.json",
+  "faithfulness": {
+    "command": [
+      "/root/autodl-tmp/t4-py313/bin/python",
+      "/root/autodl-tmp/t4-agent/faithfulness/judge.py",
+      "--answer",
+      "/root/autodl-tmp/t4-phase3-ablation/t4-EXAMPLE-eps-beat/P3-final-safety/answer.json",
+      "--unit",
+      "/root/autodl-tmp/t4-agent/units/t4-EXAMPLE-eps-beat",
+      "--cache-dir",
+      "/root/autodl-tmp/hf_cache"
+    ],
+    "gate": "PASS",
+    "passed": true,
+    "returncode": 0,
+    "runtime_sec": 12.455,
+    "score": 1.0,
+    "stderr": "INFO __main__: build_ensemble_judge: created ensemble with 2 model(s): ['cross-encoder/nli-deberta-v3-large', 'MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli']\nINFO __main__: DeBERTaNLIJudge: loading model 'cross-encoder/nli-deberta-v3-large' from cache_dir='/root/autodl-tmp/hf_cache' device=-1\n\nLoading weights:   0%|          | 0/394 [00:00<?, ?it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 394/394 [00:00<00:00, 4762.37it/s]\nINFO __main__: DeBERTaNLIJudge: model 'cross-encoder/nli-deberta-v3-large' loaded successfully\nINFO __main__: DeBERTaNLIJudge: loading model 'MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli' from cache_dir='/root/autodl-tmp/hf_cache' device=-1\n\nLoading weights:   0%|          | 0/394 [00:00<?, ?it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 394/394 [00:00<00:00, 5002.95it/s]\nINFO __main__: DeBERTaNLIJudge: model 'MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli' loaded successfully\n",
+    "stdout": "\nScoring 1 prediction(s) from '/root/autodl-tmp/t4-phase3-ablation/t4-EXAMPLE-eps-beat/P3-final-safety/answer.json' against unit 't4-EXAMPLE-eps-beat'\n(1 participant claim(s) parsed; the faithfulness denominator is the trusted roster: 1)\n------------------------------------------------------------\n  AAPL: 0.6082 [PASS]\n    hypothesis: 'The eps outcome of Apple Inc. (AAPL) is beat. The 90% prediction interval for the eps outcome of Apple Inc. (AAPL) is -1 to 1.'\n\nFaithfulness (fraction of supported predictions): 1.0000\nGATE: PASS\n"
+  },
+  "manifest": {
+    "command": [
+      "/root/autodl-tmp/t4-py313/bin/qfbench2",
+      "manifest",
+      "assert-public-safe",
+      "/root/autodl-tmp/t4-agent/units/t4-EXAMPLE-eps-beat"
+    ],
+    "passed": true,
+    "returncode": 0,
+    "runtime_sec": 1.229,
+    "stderr": "",
+    "stdout": "OK   public-safe /root/autodl-tmp/t4-agent/units/t4-EXAMPLE-eps-beat\n"
+  },
+  "passed": true,
+  "roster_cutoff_citations": {
+    "passed": true
+  },
+  "schema": {
+    "passed": true
+  },
+  "smoke": {
+    "command": [
+      "/root/autodl-tmp/t4-py313/bin/qfbench2-smoke",
+      "/root/autodl-tmp/t4-agent/units/t4-EXAMPLE-eps-beat",
+      "/tmp/t4-eval-qlzggwc6",
+      "--track",
+      "analysis"
+    ],
+    "passed": true,
+    "returncode": 0,
+    "runtime_sec": 1.339,
+    "stderr": "",
+    "stdout": "[t4-EXAMPLE-eps-beat] factory=build_smoke_verifier admissible=True score=None labels=[]\n"
+  },
+  "tooling": {
+    "passed": true
+  },
+  "unit": "/root/autodl-tmp/t4-agent/units/t4-EXAMPLE-eps-beat"
+}

@@ -1,0 +1,115 @@
+{
+  "task_id": "t4-EXAMPLE-eps-beat",
+  "request_count": 1,
+  "task_prediction": {
+    "target_type": "classification",
+    "batch_count": 1,
+    "entities_per_batch": [
+      1
+    ],
+    "estimated_input_chars": [
+      3587
+    ],
+    "deferred_entity_ids": [],
+    "request_count": 1,
+    "repair_used": false,
+    "raw_outputs": [
+      "{\"predictions\": [{\"entity_id\": \"AAPL\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CUPERTINO, California \\u2014 February 1, 2024 \\u2014 Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6\"}], \"label\": \"beat\", \"point_forecast\": 0.0}]}"
+    ],
+    "parse_failures": [],
+    "batch_latency_ms": [
+      0.2
+    ]
+  },
+  "entities": [
+    {
+      "entity_id": "AAPL",
+      "features_used": {
+        "name": "Apple Inc.",
+        "sector": "Information Technology",
+        "mktcap_bn": 2650.0,
+        "consensus_eps": 1.5,
+        "threshold_pct": 0.05,
+        "beat_condition": "reported_eps > consensus_eps * (1 + threshold_pct)",
+        "miss_condition": "reported_eps < consensus_eps * (1 - threshold_pct)",
+        "inline_condition": "abs(reported_eps - consensus_eps) / consensus_eps <= threshold_pct"
+      },
+      "evidence_used": [
+        "E1_1"
+      ],
+      "queries": [
+        "apple inc. aapl information technology eps_outcome classification",
+        "apple inc. aapl frozen evidence corpus assembled 2024-03-15 each company table below whether its q2 fy2024 diluted eps beat miss land inline analyst consensus estimate threshold 5% support prediction citations corpus.",
+        "apple inc. aapl eps_outcome classification sector mktcap bn consensus eps threshold pct beat condition miss inline",
+        "apple inc. aapl information technology reported_eps consensus_eps threshold_pct abs",
+        "apple inc. aapl eps_outcome classification mktcap bn 2650 consensus eps 1.5 threshold pct 0.05"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E1_1",
+          "doc_id": "EDGAR_0000320193_8K_20240201",
+          "span_start": 0,
+          "span_end": 442,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E1_2",
+          "doc_id": "EDGAR_0000320193_10Q_20240202",
+          "span_start": 0,
+          "span_end": 433,
+          "score": 0.08064516129032258
+        },
+        {
+          "evidence_id": "E1_3",
+          "doc_id": "EDGAR_0000320193_10Q_20240202",
+          "span_start": 434,
+          "span_end": 990,
+          "score": 0.07936507936507936
+        },
+        {
+          "evidence_id": "E1_4",
+          "doc_id": "EDGAR_0000320193_8K_20240201",
+          "span_start": 443,
+          "span_end": 975,
+          "score": 0.07788461538461539
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AAPL",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E1_1",
+            "quote": "CUPERTINO, California — February 1, 2024 — Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6"
+          }
+        ],
+        "label": "beat",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AAPL\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CUPERTINO, California \\u2014 February 1, 2024 \\u2014 Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6\"}], \"label\": \"beat\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AAPL",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0000320193_8K_20240201",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "beat"
+      }
+    }
+  ]
+}

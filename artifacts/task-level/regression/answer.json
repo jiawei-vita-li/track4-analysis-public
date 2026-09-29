@@ -1,0 +1,132 @@
+{
+  "task_id": "t4-auction-btc-202411-us7",
+  "schema_version": "3",
+  "entity_predictions": [
+    {
+      "entity_id": "AUC_10Y_20241105",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "AUC_20Y_20241120",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 669,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "AUC_2Y_20241125",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "AUC_30Y_20241106",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "AUC_3Y_20241104",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "AUC_5Y_20241126",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 669,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "AUC_7Y_20241127",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    }
+  ],
+  "evidence_trace": "strong_rag_baseline: BM25 span-chunk retrieval + $MODEL_ENDPOINT. 7 grounded claims kept, 0 ungroundable evidence items dropped. All cited spans resolved in the frozen corpus; embargo enforced at retrieval time.",
+  "notes": {
+    "agent": "strong_rag_baseline",
+    "retrieval": "bm25-span-chunks",
+    "dropped_evidence_items": 0
+  },
+  "target_type": "regression"
+}

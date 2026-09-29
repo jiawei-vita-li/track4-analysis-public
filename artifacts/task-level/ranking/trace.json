@@ -1,0 +1,896 @@
+{
+  "task_id": "t4-cotpos-202411-us10",
+  "request_count": 1,
+  "task_prediction": {
+    "target_type": "ranking",
+    "batch_count": 1,
+    "entities_per_batch": [
+      10
+    ],
+    "estimated_input_chars": [
+      25905
+    ],
+    "deferred_entity_ids": [],
+    "request_count": 1,
+    "repair_used": false,
+    "raw_outputs": [
+      "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}"
+    ],
+    "parse_failures": [],
+    "batch_latency_ms": [
+      0.739
+    ]
+  },
+  "entities": [
+    {
+      "entity_id": "CORN_CBT",
+      "features_used": {
+        "name": "Corn futures",
+        "exchange": "Chicago Board of Trade",
+        "asset_class": "agriculture",
+        "net_noncommercial_20241022": 17840,
+        "open_interest_20241022": 1643455,
+        "net_pct_oi_20241022": 1.09,
+        "trailing_4wk_net_change_pct_oi": 4.99,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E1_1"
+      ],
+      "queries": [
+        "corn futures corn_cbt net_positioning_change_pct_oi_rank ranking",
+        "corn futures corn_cbt using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank largest",
+        "corn futures corn_cbt net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "corn futures corn_cbt chicago board trade agriculture pct_of_open_interest",
+        "corn futures corn_cbt net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 17840 open interest 1.64346e 06 pct oi 1.09 trailing 4wk change 4.99"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E1_1",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 0,
+          "span_end": 459,
+          "score": 0.04865990111891752
+        },
+        {
+          "evidence_id": "E1_2",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.04813947436898257
+        },
+        {
+          "evidence_id": "E1_3",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 2399,
+          "span_end": 2900,
+          "score": 0.04788306451612903
+        },
+        {
+          "evidence_id": "E1_4",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.047379032258064516
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "CORN_CBT",
+        "interval": {
+          "lo": 8920.0,
+          "hi": 26760.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E1_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): Corn futures — Chicago Board of Trade.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the"
+          }
+        ],
+        "score": 17840.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "CORN_CBT",
+        "point_forecast": 17840.0,
+        "interval": {
+          "level": 0.9,
+          "lo": 8920.0,
+          "hi": 26760.0
+        },
+        "claims": [
+          {
+            "doc_id": "COT_CORN_CBT_20241025",
+            "span_start": 0,
+            "span_end": 196,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "ES_SP500",
+      "features_used": {
+        "name": "E-mini S&P 500 futures",
+        "exchange": "Chicago Mercantile Exchange",
+        "asset_class": "equity",
+        "net_noncommercial_20241022": 22981,
+        "open_interest_20241022": 2186686,
+        "net_pct_oi_20241022": 1.05,
+        "trailing_4wk_net_change_pct_oi": 2.69,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E2_1"
+      ],
+      "queries": [
+        "e-mini 500 futures es_sp500 net_positioning_change_pct_oi_rank ranking",
+        "e-mini 500 futures es_sp500 using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank",
+        "e-mini 500 futures es_sp500 net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "e-mini 500 futures es_sp500 chicago mercantile exchange equity pct_of_open_interest",
+        "e-mini 500 futures es_sp500 net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 22981 open interest 2.18669e 06 pct oi 1.05 trailing 4wk change 2.69"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E2_1",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 0,
+          "span_end": 474,
+          "score": 0.0817028027498678
+        },
+        {
+          "evidence_id": "E2_2",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 2416,
+          "span_end": 2907,
+          "score": 0.06427650713907986
+        },
+        {
+          "evidence_id": "E2_3",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.03149801587301587
+        },
+        {
+          "evidence_id": "E2_4",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.031009615384615385
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "ES_SP500",
+        "interval": {
+          "lo": 11490.5000000005,
+          "hi": 34471.5000000015
+        },
+        "evidence": [
+          {
+            "evidence_id": "E2_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures — Chicago Mercantile Exchange.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday"
+          }
+        ],
+        "score": 22981.000000001
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "ES_SP500",
+        "point_forecast": 22981.000000001,
+        "interval": {
+          "level": 0.9,
+          "lo": 11490.5000000005,
+          "hi": 34471.5000000015
+        },
+        "claims": [
+          {
+            "doc_id": "COT_ES_SP500_20241025",
+            "span_start": 0,
+            "span_end": 195,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "EURO_FX",
+      "features_used": {
+        "name": "Euro FX futures",
+        "exchange": "Chicago Mercantile Exchange",
+        "asset_class": "fx",
+        "net_noncommercial_20241022": -28524,
+        "open_interest_20241022": 650759,
+        "net_pct_oi_20241022": -4.38,
+        "trailing_4wk_net_change_pct_oi": -15.4,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E3_1"
+      ],
+      "queries": [
+        "euro fx futures euro_fx net_positioning_change_pct_oi_rank ranking",
+        "euro fx futures euro_fx using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank",
+        "euro fx futures euro_fx net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "euro fx futures euro_fx chicago mercantile exchange pct_of_open_interest",
+        "euro fx futures euro_fx net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 28524 open interest 650759 pct oi 4.38 trailing 4wk change 15.4"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E3_1",
+          "doc_id": "COT_EURO_FX_20241025",
+          "span_start": 0,
+          "span_end": 467,
+          "score": 0.0817028027498678
+        },
+        {
+          "evidence_id": "E3_2",
+          "doc_id": "COT_EURO_FX_20241025",
+          "span_start": 2403,
+          "span_end": 2968,
+          "score": 0.06427650713907986
+        },
+        {
+          "evidence_id": "E3_3",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.047619047619047616
+        },
+        {
+          "evidence_id": "E3_4",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.046875
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "EURO_FX",
+        "interval": {
+          "lo": -42785.999999997,
+          "hi": -14261.999999999
+        },
+        "evidence": [
+          {
+            "evidence_id": "E3_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): Euro FX futures — Chicago Mercantile Exchange.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22"
+          }
+        ],
+        "score": -28523.999999998
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "EURO_FX",
+        "point_forecast": -28523.999999998,
+        "interval": {
+          "level": 0.9,
+          "lo": -42785.999999997,
+          "hi": -14261.999999999
+        },
+        "claims": [
+          {
+            "doc_id": "COT_EURO_FX_20241025",
+            "span_start": 0,
+            "span_end": 199,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "GOLD_CMX",
+      "features_used": {
+        "name": "Gold futures",
+        "exchange": "Commodity Exchange (COMEX)",
+        "asset_class": "metals",
+        "net_noncommercial_20241022": 296204,
+        "open_interest_20241022": 573760,
+        "net_pct_oi_20241022": 51.63,
+        "trailing_4wk_net_change_pct_oi": -3.34,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E4_1"
+      ],
+      "queries": [
+        "gold futures gold_cmx net_positioning_change_pct_oi_rank ranking",
+        "gold futures gold_cmx using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank largest",
+        "gold futures gold_cmx net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "gold futures gold_cmx commodity exchange comex metals pct_of_open_interest",
+        "gold futures gold_cmx net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 296204 open interest 573760 pct oi 51.63 trailing 4wk change 3.34"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E4_1",
+          "doc_id": "COT_GOLD_CMX_20241025",
+          "span_start": 0,
+          "span_end": 463,
+          "score": 0.06505334374186834
+        },
+        {
+          "evidence_id": "E4_2",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.04787506400409626
+        },
+        {
+          "evidence_id": "E4_3",
+          "doc_id": "COT_GOLD_CMX_20241025",
+          "span_start": 2411,
+          "span_end": 2977,
+          "score": 0.04722835723395651
+        },
+        {
+          "evidence_id": "E4_4",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.04712301587301587
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "GOLD_CMX",
+        "interval": {
+          "lo": 148102.0000000015,
+          "hi": 444306.00000000454
+        },
+        "evidence": [
+          {
+            "evidence_id": "E4_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): Gold futures — Commodity Exchange (COMEX).\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22"
+          }
+        ],
+        "score": 296204.000000003
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "GOLD_CMX",
+        "point_forecast": 296204.000000003,
+        "interval": {
+          "level": 0.9,
+          "lo": 148102.0000000015,
+          "hi": 444306.00000000454
+        },
+        "claims": [
+          {
+            "doc_id": "COT_GOLD_CMX_20241025",
+            "span_start": 0,
+            "span_end": 195,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "JPY_CME",
+      "features_used": {
+        "name": "Japanese yen futures",
+        "exchange": "Chicago Mercantile Exchange",
+        "asset_class": "fx",
+        "net_noncommercial_20241022": 12771,
+        "open_interest_20241022": 207338,
+        "net_pct_oi_20241022": 6.16,
+        "trailing_4wk_net_change_pct_oi": -25.68,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E5_1"
+      ],
+      "queries": [
+        "japanese yen futures jpy_cme net_positioning_change_pct_oi_rank ranking",
+        "japanese yen futures jpy_cme using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank",
+        "japanese yen futures jpy_cme net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "japanese yen futures jpy_cme chicago mercantile exchange fx pct_of_open_interest",
+        "japanese yen futures jpy_cme net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 12771 open interest 207338 pct oi 6.16 trailing 4wk change 25.68"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E5_1",
+          "doc_id": "COT_JPY_CME_20241025",
+          "span_start": 0,
+          "span_end": 472,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E5_2",
+          "doc_id": "COT_JPY_CME_20241025",
+          "span_start": 2418,
+          "span_end": 2965,
+          "score": 0.0637560803891449
+        },
+        {
+          "evidence_id": "E5_3",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.04712301587301587
+        },
+        {
+          "evidence_id": "E5_4",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.04639423076923077
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "JPY_CME",
+        "interval": {
+          "lo": 6385.500000002,
+          "hi": 19156.500000006
+        },
+        "evidence": [
+          {
+            "evidence_id": "E5_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures — Chicago Mercantile Exchange.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday"
+          }
+        ],
+        "score": 12771.000000004
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "JPY_CME",
+        "point_forecast": 12771.000000004,
+        "interval": {
+          "level": 0.9,
+          "lo": 6385.500000002,
+          "hi": 19156.500000006
+        },
+        "claims": [
+          {
+            "doc_id": "COT_JPY_CME_20241025",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "NATGAS_NYMEX",
+      "features_used": {
+        "name": "Henry Hub natural gas futures",
+        "exchange": "New York Mercantile Exchange",
+        "asset_class": "energy",
+        "net_noncommercial_20241022": -166185,
+        "open_interest_20241022": 1644880,
+        "net_pct_oi_20241022": -10.1,
+        "trailing_4wk_net_change_pct_oi": -4.54,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E6_1"
+      ],
+      "queries": [
+        "henry hub natural gas futures natgas_nymex net_positioning_change_pct_oi_rank ranking",
+        "henry hub natural gas futures natgas_nymex using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open",
+        "henry hub natural gas futures natgas_nymex net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "henry hub natural gas futures natgas_nymex new york mercantile exchange energy pct_of_open_interest",
+        "henry hub natural gas futures natgas_nymex net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 166185 open interest 1.64488e 06 pct oi 10.1 trailing 4wk change 4.54"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E6_1",
+          "doc_id": "COT_NATGAS_NYMEX_20241025",
+          "span_start": 0,
+          "span_end": 482,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E6_2",
+          "doc_id": "COT_NATGAS_NYMEX_20241025",
+          "span_start": 2424,
+          "span_end": 2930,
+          "score": 0.07915561141367593
+        },
+        {
+          "evidence_id": "E6_3",
+          "doc_id": "MKT_SNAPSHOT_20241031",
+          "span_start": 1442,
+          "span_end": 1742,
+          "score": 0.06350006400409626
+        },
+        {
+          "evidence_id": "E6_4",
+          "doc_id": "MKT_SNAPSHOT_20241031",
+          "span_start": 370,
+          "span_end": 969,
+          "score": 0.062259615384615385
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "NATGAS_NYMEX",
+        "interval": {
+          "lo": -249277.4999999925,
+          "hi": -83092.4999999975
+        },
+        "evidence": [
+          {
+            "evidence_id": "E6_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures — New York Mercantile Exchange.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through"
+          }
+        ],
+        "score": -166184.999999995
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "NATGAS_NYMEX",
+        "point_forecast": -166184.999999995,
+        "interval": {
+          "level": 0.9,
+          "lo": -249277.4999999925,
+          "hi": -83092.4999999975
+        },
+        "claims": [
+          {
+            "doc_id": "COT_NATGAS_NYMEX_20241025",
+            "span_start": 0,
+            "span_end": 195,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "SILVER_CMX",
+      "features_used": {
+        "name": "Silver futures",
+        "exchange": "Commodity Exchange (COMEX)",
+        "asset_class": "metals",
+        "net_noncommercial_20241022": 66355,
+        "open_interest_20241022": 157264,
+        "net_pct_oi_20241022": 42.19,
+        "trailing_4wk_net_change_pct_oi": 2.64,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E7_1"
+      ],
+      "queries": [
+        "silver futures silver_cmx net_positioning_change_pct_oi_rank ranking",
+        "silver futures silver_cmx using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank largest",
+        "silver futures silver_cmx net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "silver futures silver_cmx commodity exchange comex metals pct_of_open_interest",
+        "silver futures silver_cmx net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 66355 open interest 157264 pct oi 42.19 trailing 4wk change 2.64"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E7_1",
+          "doc_id": "COT_SILVER_CMX_20241025",
+          "span_start": 0,
+          "span_end": 465,
+          "score": 0.06505334374186834
+        },
+        {
+          "evidence_id": "E7_2",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.048131080389144903
+        },
+        {
+          "evidence_id": "E7_3",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.047371031746031744
+        },
+        {
+          "evidence_id": "E7_4",
+          "doc_id": "COT_SILVER_CMX_20241025",
+          "span_start": 2414,
+          "span_end": 2953,
+          "score": 0.04722835723395651
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "SILVER_CMX",
+        "interval": {
+          "lo": 33177.500000003,
+          "hi": 99532.500000009
+        },
+        "evidence": [
+          {
+            "evidence_id": "E7_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): Silver futures — Commodity Exchange (COMEX).\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22"
+          }
+        ],
+        "score": 66355.000000006
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "SILVER_CMX",
+        "point_forecast": 66355.000000006,
+        "interval": {
+          "level": 0.9,
+          "lo": 33177.500000003,
+          "hi": 99532.500000009
+        },
+        "claims": [
+          {
+            "doc_id": "COT_SILVER_CMX_20241025",
+            "span_start": 0,
+            "span_end": 197,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "UST_10Y",
+      "features_used": {
+        "name": "U.S. Treasury 10-Year Note futures",
+        "exchange": "Chicago Board of Trade",
+        "asset_class": "rates",
+        "net_noncommercial_20241022": -848191,
+        "open_interest_20241022": 4660932,
+        "net_pct_oi_20241022": -18.2,
+        "trailing_4wk_net_change_pct_oi": 3.8,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E8_1"
+      ],
+      "queries": [
+        "u.s. treasury 10-year note futures ust_10y net_positioning_change_pct_oi_rank ranking",
+        "u.s. treasury 10-year note futures ust_10y using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major markets through 2024-10-22 report cot methodology release-schedule market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank",
+        "u.s. treasury 10-year note futures ust_10y net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "u.s. treasury 10-year note futures ust_10y chicago board trade rates pct_of_open_interest",
+        "u.s. treasury 10-year note futures ust_10y net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 848191 open interest 4.66093e 06 pct oi 18.2 trailing 4wk change 3.8"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E8_1",
+          "doc_id": "COT_UST_2Y_20241025",
+          "span_start": 0,
+          "span_end": 480,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E8_2",
+          "doc_id": "COT_UST_10Y_20241025",
+          "span_start": 0,
+          "span_end": 481,
+          "score": 0.08064516129032258
+        },
+        {
+          "evidence_id": "E8_3",
+          "doc_id": "COT_UST_10Y_20241025",
+          "span_start": 2411,
+          "span_end": 2891,
+          "score": 0.06324404761904762
+        },
+        {
+          "evidence_id": "E8_4",
+          "doc_id": "COT_UST_2Y_20241025",
+          "span_start": 2425,
+          "span_end": 2944,
+          "score": 0.062259615384615385
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "UST_10Y",
+        "interval": {
+          "lo": -1272286.4999999895,
+          "hi": -424095.4999999965
+        },
+        "evidence": [
+          {
+            "evidence_id": "E8_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures — Chicago Board of Trade.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through"
+          }
+        ],
+        "score": -848190.999999993
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "UST_10Y",
+        "point_forecast": -848190.999999993,
+        "interval": {
+          "level": 0.9,
+          "lo": -1272286.4999999895,
+          "hi": -424095.4999999965
+        },
+        "claims": [
+          {
+            "doc_id": "COT_UST_2Y_20241025",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "UST_2Y",
+      "features_used": {
+        "name": "U.S. Treasury 2-Year Note futures",
+        "exchange": "Chicago Board of Trade",
+        "asset_class": "rates",
+        "net_noncommercial_20241022": -1380910,
+        "open_interest_20241022": 4544942,
+        "net_pct_oi_20241022": -30.38,
+        "trailing_4wk_net_change_pct_oi": -7.36,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E9_1"
+      ],
+      "queries": [
+        "u.s. treasury 2-year note futures ust_2y net_positioning_change_pct_oi_rank ranking",
+        "u.s. treasury 2-year note futures ust_2y using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major markets through 2024-10-22 report cot methodology release-schedule market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent open interest. rank",
+        "u.s. treasury 2-year note futures ust_2y net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "u.s. treasury 2-year note futures ust_2y chicago board trade rates pct_of_open_interest",
+        "u.s. treasury 2-year note futures ust_2y net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 1.38091e 06 open interest 4.54494e pct oi 30.38 trailing 4wk change 7.36"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E9_1",
+          "doc_id": "COT_UST_2Y_20241025",
+          "span_start": 0,
+          "span_end": 480,
+          "score": 0.0817028027498678
+        },
+        {
+          "evidence_id": "E9_2",
+          "doc_id": "COT_UST_10Y_20241025",
+          "span_start": 0,
+          "span_end": 481,
+          "score": 0.08038914490527393
+        },
+        {
+          "evidence_id": "E9_3",
+          "doc_id": "COT_UST_2Y_20241025",
+          "span_start": 2425,
+          "span_end": 2944,
+          "score": 0.06302805800756621
+        },
+        {
+          "evidence_id": "E9_4",
+          "doc_id": "COT_UST_10Y_20241025",
+          "span_start": 2411,
+          "span_end": 2891,
+          "score": 0.06275564713064713
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "UST_2Y",
+        "interval": {
+          "lo": -2071364.9999999881,
+          "hi": -690454.999999996
+        },
+        "evidence": [
+          {
+            "evidence_id": "E9_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures — Chicago Board of Trade.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through"
+          }
+        ],
+        "score": -1380909.999999992
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "UST_2Y",
+        "point_forecast": -1380909.999999992,
+        "interval": {
+          "level": 0.9,
+          "lo": -2071364.9999999881,
+          "hi": -690454.999999996
+        },
+        "claims": [
+          {
+            "doc_id": "COT_UST_2Y_20241025",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "WTI_NYMEX",
+      "features_used": {
+        "name": "WTI crude oil futures (physical delivery)",
+        "exchange": "New York Mercantile Exchange",
+        "asset_class": "energy",
+        "net_noncommercial_20241022": 173731,
+        "open_interest_20241022": 1648928,
+        "net_pct_oi_20241022": 10.54,
+        "trailing_4wk_net_change_pct_oi": 0.92,
+        "unit": "pct_of_open_interest"
+      },
+      "evidence_used": [
+        "E10_1"
+      ],
+      "queries": [
+        "wti crude oil futures physical delivery wti_nymex net_positioning_change_pct_oi_rank ranking",
+        "wti crude oil futures physical delivery wti_nymex using only frozen evidence corpus cftc commitments traders weekly noncommercial positioning tables ten major u.s. markets through 2024-10-22 report cot methodology release-schedule note market macro snapshot 2024-10-31 cutoff ranking change net position 2024-11-26 expressed percent",
+        "wti crude oil futures physical delivery wti_nymex net_positioning_change_pct_oi_rank ranking exchange asset class net noncommercial 20241022 open interest pct oi trailing 4wk change unit",
+        "wti crude oil futures physical delivery wti_nymex new york mercantile exchange energy pct_of_open_interest",
+        "wti crude oil futures physical delivery wti_nymex net_positioning_change_pct_oi_rank ranking net noncommercial 20241022 173731 open interest 1.64893e 06 pct oi 10.54 trailing 4wk change 0.92"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E10_1",
+          "doc_id": "COT_WTI_NYMEX_20241025",
+          "span_start": 0,
+          "span_end": 494,
+          "score": 0.0817028027498678
+        },
+        {
+          "evidence_id": "E10_2",
+          "doc_id": "COT_WTI_NYMEX_20241025",
+          "span_start": 2434,
+          "span_end": 2980,
+          "score": 0.08090957165520889
+        },
+        {
+          "evidence_id": "E10_3",
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 460,
+          "span_end": 614,
+          "score": 0.04618300439195962
+        },
+        {
+          "evidence_id": "E10_4",
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 475,
+          "span_end": 629,
+          "score": 0.04548239750445633
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "WTI_NYMEX",
+        "interval": {
+          "lo": 86865.5000000045,
+          "hi": 260596.5000000135
+        },
+        "evidence": [
+          {
+            "evidence_id": "E10_1",
+            "quote": "CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) — New York Mercantile Exchange.\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30"
+          }
+        ],
+        "score": 173731.000000009
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"CORN_CBT\", \"interval\": {\"lo\": 8920.0, \"hi\": 26760.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Corn futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22 (the\"}], \"score\": 17840.0}, {\"entity_id\": \"ES_SP500\", \"interval\": {\"lo\": 11490.5000000005, \"hi\": 34471.5000000015}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): E-mini S&P 500 futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 22981.000000001}, {\"entity_id\": \"EURO_FX\", \"interval\": {\"lo\": -42785.999999997, \"hi\": -14261.999999999}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Euro FX futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": -28523.999999998}, {\"entity_id\": \"GOLD_CMX\", \"interval\": {\"lo\": 148102.0000000015, \"hi\": 444306.00000000454}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Gold futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 296204.000000003}, {\"entity_id\": \"JPY_CME\", \"interval\": {\"lo\": 6385.500000002, \"hi\": 19156.500000006}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Japanese yen futures \\u2014 Chicago Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday\"}], \"score\": 12771.000000004}, {\"entity_id\": \"NATGAS_NYMEX\", \"interval\": {\"lo\": -249277.4999999925, \"hi\": -83092.4999999975}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Henry Hub natural gas futures \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -166184.999999995}, {\"entity_id\": \"SILVER_CMX\", \"interval\": {\"lo\": 33177.500000003, \"hi\": 99532.500000009}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): Silver futures \\u2014 Commodity Exchange (COMEX).\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through Tuesday 2024-10-22\"}], \"score\": 66355.000000006}, {\"entity_id\": \"UST_10Y\", \"interval\": {\"lo\": -1272286.4999999895, \"hi\": -424095.4999999965}, \"evidence\": [{\"evidence_id\": \"E8_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -848190.999999993}, {\"entity_id\": \"UST_2Y\", \"interval\": {\"lo\": -2071364.9999999881, \"hi\": -690454.999999996}, \"evidence\": [{\"evidence_id\": \"E9_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): U.S. Treasury 2-Year Note futures \\u2014 Chicago Board of Trade.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30 through\"}], \"score\": -1380909.999999992}, {\"entity_id\": \"WTI_NYMEX\", \"interval\": {\"lo\": 86865.5000000045, \"hi\": 260596.5000000135}, \"evidence\": [{\"evidence_id\": \"E10_1\", \"quote\": \"CFTC Commitments of Traders (legacy report, futures only): WTI crude oil futures (physical delivery) \\u2014 New York Mercantile Exchange.\\nWeekly noncommercial positioning, reports as of Tuesday 2024-04-30\"}], \"score\": 173731.000000009}]}",
+      "final_prediction": {
+        "entity_id": "WTI_NYMEX",
+        "point_forecast": 173731.000000009,
+        "interval": {
+          "level": 0.9,
+          "lo": 86865.5000000045,
+          "hi": 260596.5000000135
+        },
+        "claims": [
+          {
+            "doc_id": "COT_WTI_NYMEX_20241025",
+            "span_start": 0,
+            "span_end": 199,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    }
+  ]
+}

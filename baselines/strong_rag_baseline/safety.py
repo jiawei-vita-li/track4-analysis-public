@@ -21,6 +21,14 @@ class ContractError(ValueError):
     """The frozen inputs make a valid answer impossible or the repair failed."""
 
 
+def task_target_type(task: Mapping) -> object:
+    """Read both published task shapes, preferring the top-level declaration."""
+    if task.get("target_type") is not None:
+        return task.get("target_type")
+    target = task.get("target")
+    return target.get("type") if isinstance(target, Mapping) else None
+
+
 def _finite(value: object) -> float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -125,7 +133,7 @@ def sanitize_results(
             first_by_id[entity_id] = result
 
     target = task.get("target") or {}
-    target_type = target.get("type")
+    target_type = task_target_type(task)
     labels = target.get("labels") or []
     level = _finite(task.get("interval_level"))
     if target_type not in {"classification", "regression", "ranking"}:
@@ -187,7 +195,9 @@ def preflight(task: Mapping, answer: Mapping, corpus: IndexedCorpus) -> None:
         raise ContractError("entity roster is missing, duplicated, unknown, or out of order")
 
     target = task.get("target") or {}
-    target_type = target.get("type")
+    target_type = task_target_type(task)
+    if "target_type" in answer and answer.get("target_type") != target_type:
+        raise ContractError("target_type mismatch")
     labels = target.get("labels") or []
     level = _finite(task.get("interval_level"))
     ranks: list[int] = []

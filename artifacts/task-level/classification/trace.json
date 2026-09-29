@@ -1,0 +1,560 @@
+{
+  "task_id": "t4-eps-yoy-2023Q2-mixed",
+  "request_count": 1,
+  "task_prediction": {
+    "target_type": "classification",
+    "batch_count": 1,
+    "entities_per_batch": [
+      6
+    ],
+    "estimated_input_chars": [
+      17424
+    ],
+    "deferred_entity_ids": [],
+    "request_count": 1,
+    "repair_used": false,
+    "raw_outputs": [
+      "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}"
+    ],
+    "parse_failures": [],
+    "batch_latency_ms": [
+      0.501
+    ]
+  },
+  "entities": [
+    {
+      "entity_id": "AMD",
+      "features_used": {
+        "name": "Advanced Micro Devices, Inc.",
+        "sector": "Information Technology",
+        "cik": "0000002488",
+        "quarter_reported": "three months ended 2023-06-30",
+        "prior_year_quarter": "three months ended 2022-06-30",
+        "prior_year_q_eps": 0.27,
+        "expected_report_date": "2023-08-01",
+        "currency": "USD/share"
+      },
+      "evidence_used": [
+        "E1_1"
+      ],
+      "queries": [
+        "advanced micro devices inc. amd information technology eps_yoy_direction classification",
+        "advanced micro devices inc. amd using only frozen evidence corpus each company sec filings available before 2023-07-14 cutoff whether its gaap diluted eps june-2023 quarter reported after higher up lower down than same one year earlier prior_year_q_eps also give point forecast june-2023-quarter",
+        "advanced micro devices inc. amd eps_yoy_direction classification sector cik quarter reported prior year eps expected report date currency",
+        "advanced micro devices inc. amd information technology 0000002488 three months ended 2023-06-30 2022-06-30 2023-08-01 usd share",
+        "advanced micro devices inc. amd eps_yoy_direction classification prior year eps 0.27"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E1_1",
+          "doc_id": "EDGAR_0000002488_10Q_20230503",
+          "span_start": 45311,
+          "span_end": 45865,
+          "score": 0.08170280274986781
+        },
+        {
+          "evidence_id": "E1_2",
+          "doc_id": "EDGAR_0000002488_10Q_20230503",
+          "span_start": 10594,
+          "span_end": 11149,
+          "score": 0.08065355527016024
+        },
+        {
+          "evidence_id": "E1_3",
+          "doc_id": "EDGAR_0000002488_10Q_20230503",
+          "span_start": 47078,
+          "span_end": 47561,
+          "score": 0.0781475468975469
+        },
+        {
+          "evidence_id": "E1_4",
+          "doc_id": "EDGAR_0000002488_10Q_20230503",
+          "span_start": 0,
+          "span_end": 480,
+          "score": 0.07717837717837718
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AMD",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E1_1",
+            "quote": "References in this Quarterly Report on Form 10-Q to “AMD,” “we,” “us,” “management,” “our” or the “Company” mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow"
+          }
+        ],
+        "label": "up",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AMD",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0000002488_10Q_20230503",
+            "span_start": 45311,
+            "span_end": 45506,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "up"
+      }
+    },
+    {
+      "entity_id": "AMGN",
+      "features_used": {
+        "name": "Amgen Inc.",
+        "sector": "Health Care",
+        "cik": "0000318154",
+        "quarter_reported": "three months ended 2023-06-30",
+        "prior_year_quarter": "three months ended 2022-06-30",
+        "prior_year_q_eps": 2.45,
+        "expected_report_date": "2023-08-01",
+        "currency": "USD/share"
+      },
+      "evidence_used": [
+        "E2_1"
+      ],
+      "queries": [
+        "amgen inc. amgn health care eps_yoy_direction classification",
+        "amgen inc. amgn using only frozen evidence corpus each company sec filings available before 2023-07-14 cutoff whether its gaap diluted eps june-2023 quarter reported after higher up lower down than same one year earlier prior_year_q_eps also give point forecast june-2023-quarter 90% interval.",
+        "amgen inc. amgn eps_yoy_direction classification sector cik quarter reported prior year eps expected report date currency",
+        "amgen inc. amgn health care 0000318154 three months ended 2023-06-30 2022-06-30 2023-08-01 usd share",
+        "amgen inc. amgn eps_yoy_direction classification prior year eps 2.45"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E2_1",
+          "doc_id": "EDGAR_0000318154_10Q_20230428",
+          "span_start": 0,
+          "span_end": 532,
+          "score": 0.04814747488101534
+        },
+        {
+          "evidence_id": "E2_2",
+          "doc_id": "EDGAR_0000318154_10Q_20230428",
+          "span_start": 31220,
+          "span_end": 31816,
+          "score": 0.03200204813108039
+        },
+        {
+          "evidence_id": "E2_3",
+          "doc_id": "EDGAR_0000097745_10Q_20230505",
+          "span_start": 78777,
+          "span_end": 79140,
+          "score": 0.031544957774465976
+        },
+        {
+          "evidence_id": "E2_4",
+          "doc_id": "EDGAR_0000318154_10Q_20230428",
+          "span_start": 155850,
+          "span_end": 156327,
+          "score": 0.029437229437229435
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AMGN",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E2_1",
+            "quote": "amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM  10-Q (Mark One) ☑ QUARTERLY REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934"
+          }
+        ],
+        "label": "up",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AMGN",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0000318154_10Q_20230428",
+            "span_start": 0,
+            "span_end": 197,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "up"
+      }
+    },
+    {
+      "entity_id": "DOW",
+      "features_used": {
+        "name": "Dow Inc.",
+        "sector": "Materials",
+        "cik": "0001751788",
+        "quarter_reported": "three months ended 2023-06-30",
+        "prior_year_quarter": "three months ended 2022-06-30",
+        "prior_year_q_eps": 2.26,
+        "expected_report_date": "2023-07-25",
+        "currency": "USD/share"
+      },
+      "evidence_used": [
+        "E3_1"
+      ],
+      "queries": [
+        "dow inc. materials eps_yoy_direction classification",
+        "dow inc. using only frozen evidence corpus each company sec filings available before 2023-07-14 cutoff whether its gaap diluted eps june-2023 quarter reported after higher up lower down than same one year earlier prior_year_q_eps also give point forecast june-2023-quarter 90% interval. support",
+        "dow inc. eps_yoy_direction classification sector cik quarter reported prior year eps expected report date currency",
+        "dow inc. materials 0001751788 three months ended 2023-06-30 2022-06-30 2023-07-25 usd share",
+        "dow inc. eps_yoy_direction classification prior year eps 2.26"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E3_1",
+          "doc_id": "EDGAR_0001751788_10Q_20230426",
+          "span_start": 82280,
+          "span_end": 82782,
+          "score": 0.04642338900734423
+        },
+        {
+          "evidence_id": "E3_2",
+          "doc_id": "EDGAR_0000318154_10Q_20230428",
+          "span_start": 31220,
+          "span_end": 31816,
+          "score": 0.032266458495966696
+        },
+        {
+          "evidence_id": "E3_3",
+          "doc_id": "EDGAR_0001751788_10Q_20230426",
+          "span_start": 78577,
+          "span_end": 79156,
+          "score": 0.03200204813108039
+        },
+        {
+          "evidence_id": "E3_4",
+          "doc_id": "EDGAR_0001751788_10Q_20230426",
+          "span_start": 129897,
+          "span_end": 130239,
+          "score": 0.0315136476426799
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "DOW",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E3_1",
+            "quote": "ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical"
+          }
+        ],
+        "label": "up",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "DOW",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0001751788_10Q_20230426",
+            "span_start": 82280,
+            "span_end": 82475,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "up"
+      }
+    },
+    {
+      "entity_id": "HON",
+      "features_used": {
+        "name": "Honeywell International Inc.",
+        "sector": "Industrials",
+        "cik": "0000773840",
+        "quarter_reported": "three months ended 2023-06-30",
+        "prior_year_quarter": "three months ended 2022-06-30",
+        "prior_year_q_eps": 1.84,
+        "expected_report_date": "2023-07-27",
+        "currency": "USD/share"
+      },
+      "evidence_used": [
+        "E4_1"
+      ],
+      "queries": [
+        "honeywell international inc. hon industrials eps_yoy_direction classification",
+        "honeywell international inc. hon using only frozen evidence corpus each company sec filings available before 2023-07-14 cutoff whether its gaap diluted eps june-2023 quarter reported after higher up lower down than same one year earlier prior_year_q_eps also give point forecast june-2023-quarter 90%",
+        "honeywell international inc. hon eps_yoy_direction classification sector cik quarter reported prior year eps expected report date currency",
+        "honeywell international inc. hon industrials 0000773840 three months ended 2023-06-30 2022-06-30 2023-07-27 usd share",
+        "honeywell international inc. hon eps_yoy_direction classification prior year eps 1.84"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E4_1",
+          "doc_id": "EDGAR_0000773840_10Q_20230427",
+          "span_start": 42278,
+          "span_end": 42695,
+          "score": 0.06456494325346784
+        },
+        {
+          "evidence_id": "E4_2",
+          "doc_id": "EDGAR_0000773840_10Q_20230427",
+          "span_start": 77630,
+          "span_end": 77919,
+          "score": 0.06303457966764418
+        },
+        {
+          "evidence_id": "E4_3",
+          "doc_id": "EDGAR_0000773840_10Q_20230427",
+          "span_start": 82707,
+          "span_end": 82789,
+          "score": 0.062160778289810543
+        },
+        {
+          "evidence_id": "E4_4",
+          "doc_id": "EDGAR_0000773840_10Q_20230427",
+          "span_start": 95488,
+          "span_end": 95771,
+          "score": 0.04524201288907172
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "HON",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E4_1",
+            "quote": "repositioning and other charges by classification in the Consolidated Statement of Operations:   Three Months Ended March 31,   2023 2022 Cost of products and services sold $ 80   $ 199   Selling,"
+          }
+        ],
+        "label": "up",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "HON",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0000773840_10Q_20230427",
+            "span_start": 42278,
+            "span_end": 42474,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "up"
+      }
+    },
+    {
+      "entity_id": "IBM",
+      "features_used": {
+        "name": "International Business Machines Corporation",
+        "sector": "Information Technology",
+        "cik": "0000051143",
+        "quarter_reported": "three months ended 2023-06-30",
+        "prior_year_quarter": "three months ended 2022-06-30",
+        "prior_year_q_eps": 1.53,
+        "expected_report_date": "2023-07-19",
+        "currency": "USD/share"
+      },
+      "evidence_used": [
+        "E5_1"
+      ],
+      "queries": [
+        "international business machines corporation ibm information technology eps_yoy_direction classification",
+        "international business machines corporation ibm using only frozen evidence corpus each company sec filings available before 2023-07-14 cutoff whether its gaap diluted eps june-2023 quarter reported after higher up lower down than same one year earlier prior_year_q_eps also give point forecast june-2023-quarter",
+        "international business machines corporation ibm eps_yoy_direction classification sector cik quarter reported prior year eps expected report date currency",
+        "international business machines corporation ibm information technology 0000051143 three months ended 2023-06-30 2022-06-30 2023-07-19 usd share",
+        "international business machines corporation ibm eps_yoy_direction classification prior year eps 1.53"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E5_1",
+          "doc_id": "EDGAR_0000051143_10Q_20230425",
+          "span_start": 18043,
+          "span_end": 18619,
+          "score": 0.07847237903987472
+        },
+        {
+          "evidence_id": "E5_2",
+          "doc_id": "EDGAR_0000051143_10Q_20230425",
+          "span_start": 6908,
+          "span_end": 7505,
+          "score": 0.07674829316620362
+        },
+        {
+          "evidence_id": "E5_3",
+          "doc_id": "EDGAR_0000051143_10Q_20230425",
+          "span_start": 14597,
+          "span_end": 15192,
+          "score": 0.06504494976203068
+        },
+        {
+          "evidence_id": "E5_4",
+          "doc_id": "EDGAR_0000051143_10Q_20230425",
+          "span_start": 210607,
+          "span_end": 211071,
+          "score": 0.062384212119155104
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "IBM",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E5_1",
+            "quote": "Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with"
+          }
+        ],
+        "label": "up",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "IBM",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0000051143_10Q_20230425",
+            "span_start": 18043,
+            "span_end": 18240,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "up"
+      }
+    },
+    {
+      "entity_id": "TMO",
+      "features_used": {
+        "name": "Thermo Fisher Scientific Inc.",
+        "sector": "Health Care",
+        "cik": "0000097745",
+        "quarter_reported": "three months ended 2023-06-30",
+        "prior_year_quarter": "three months ended 2022-06-30",
+        "prior_year_q_eps": 4.22,
+        "expected_report_date": "2023-07-26",
+        "currency": "USD/share"
+      },
+      "evidence_used": [
+        "E6_1"
+      ],
+      "queries": [
+        "thermo fisher scientific inc. tmo health care eps_yoy_direction classification",
+        "thermo fisher scientific inc. tmo using only frozen evidence corpus each company sec filings available before 2023-07-14 cutoff whether its gaap diluted eps june-2023 quarter reported after higher up lower down than same one year earlier prior_year_q_eps also give point forecast june-2023-quarter",
+        "thermo fisher scientific inc. tmo eps_yoy_direction classification sector cik quarter reported prior year eps expected report date currency",
+        "thermo fisher scientific inc. tmo health care 0000097745 three months ended 2023-06-30 2022-06-30 2023-07-26 usd share",
+        "thermo fisher scientific inc. tmo eps_yoy_direction classification prior year eps 4.22"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E6_1",
+          "doc_id": "EDGAR_0000097745_10Q_20230505",
+          "span_start": 85038,
+          "span_end": 85578,
+          "score": 0.08067834374186834
+        },
+        {
+          "evidence_id": "E6_2",
+          "doc_id": "EDGAR_0000097745_10Q_20230505",
+          "span_start": 85579,
+          "span_end": 86059,
+          "score": 0.0796447280318248
+        },
+        {
+          "evidence_id": "E6_3",
+          "doc_id": "EDGAR_0000097745_10Q_20230505",
+          "span_start": 48052,
+          "span_end": 48084,
+          "score": 0.07656966772216134
+        },
+        {
+          "evidence_id": "E6_4",
+          "doc_id": "EDGAR_0000097745_10Q_20230505",
+          "span_start": 34939,
+          "span_end": 35271,
+          "score": 0.07554504319210202
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "TMO",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E6_1",
+            "quote": "Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.’s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher"
+          }
+        ],
+        "label": "up",
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AMD\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"References in this Quarterly Report on Form 10-Q to \\u201cAMD,\\u201d \\u201cwe,\\u201d \\u201cus,\\u201d \\u201cmanagement,\\u201d \\u201cour\\u201d or the \\u201cCompany\\u201d mean Advanced Micro Devices, Inc. and our consolidated subsidiaries. AMD, the AMD Arrow\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"AMGN\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"amgn-20230331 UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM\\u00a0 10-Q (Mark One) \\u2611 QUARTERLY REPORT PURSUANT TO SECTION\\u00a013 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"DOW\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS. This Quarterly Report on Form 10-Q is a combined report being filed by Dow Inc. and The Dow Chemical\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"HON\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"repositioning and other charges by classification in the Consolidated Statement of Operations: \\u00a0 Three Months Ended March 31, \\u00a0 2023 2022 Cost of products and services sold $ 80 \\u00a0 $ 199 \\u00a0 Selling,\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"IBM\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"Basis of Presentation: The accompanying Consolidated Financial Statements and footnotes of the International Business Machines Corporation (IBM or the company) have been prepared in accordance with\"}], \"label\": \"up\", \"point_forecast\": 0.0}, {\"entity_id\": \"TMO\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"Exhibits Exhibit Number Description of Exhibit 10.1 Form of Thermo Fisher Scientific Inc.\\u2019s Performance Restricted Stock Unit Agreement effective as of February 22, 2023 * 10.2 Form of Thermo Fisher\"}], \"label\": \"up\", \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "TMO",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "EDGAR_0000097745_10Q_20230505",
+            "span_start": 85038,
+            "span_end": 85236,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ],
+        "label": "up"
+      }
+    }
+  ]
+}

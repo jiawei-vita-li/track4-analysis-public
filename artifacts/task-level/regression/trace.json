@@ -1,0 +1,624 @@
+{
+  "task_id": "t4-auction-btc-202411-us7",
+  "request_count": 1,
+  "task_prediction": {
+    "target_type": "regression",
+    "batch_count": 1,
+    "entities_per_batch": [
+      7
+    ],
+    "estimated_input_chars": [
+      22311
+    ],
+    "deferred_entity_ids": [],
+    "request_count": 1,
+    "repair_used": false,
+    "raw_outputs": [
+      "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}"
+    ],
+    "parse_failures": [],
+    "batch_latency_ms": [
+      0.426
+    ]
+  },
+  "entities": [
+    {
+      "entity_id": "AUC_10Y_20241105",
+      "features_used": {
+        "name": "10-Year Note auction, 2024-11-05",
+        "tenor": "10-Year",
+        "auction_date": "2024-11-05",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": 42.0,
+        "size_announced_precutoff": true,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E1_1"
+      ],
+      "queries": [
+        "10-year note auction 2024-11-05 auc_10y_20241105 bid_to_cover_ratio regression",
+        "10-year note auction 2024-11-05 auc_10y_20241105 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason tenor",
+        "10-year note auction 2024-11-05 auc_10y_20241105 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "10-year note auction 2024-11-05 auc_10y_20241105 new bid_to_cover_ratio",
+        "10-year note auction 2024-11-05 auc_10y_20241105 bid_to_cover_ratio regression offering amount usd bn 42"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E1_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E1_2",
+          "doc_id": "TDIRECT_AUCTIONS_10Y_20241031",
+          "span_start": 470,
+          "span_end": 1061,
+          "score": 0.06451612903225806
+        },
+        {
+          "evidence_id": "E1_3",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 470,
+          "span_end": 1067,
+          "score": 0.0625225468975469
+        },
+        {
+          "evidence_id": "E1_4",
+          "doc_id": "TDIRECT_AUCTIONS_3Y_20241031",
+          "span_start": 441,
+          "span_end": 1040,
+          "score": 0.06180800439195962
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_10Y_20241105",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E1_1",
+            "quote": "November 2024 Treasury coupon auctions — announced terms and tentative schedule, as of 2024-10-31.\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_10Y_20241105",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "AUC_20Y_20241120",
+      "features_used": {
+        "name": "20-Year Bond auction, week of 2024-11-18",
+        "tenor": "20-Year",
+        "auction_date": "2024-11-20",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": null,
+        "size_announced_precutoff": false,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E2_1"
+      ],
+      "queries": [
+        "20-year bond auction week 2024-11-18 auc_20y_20241120 bid_to_cover_ratio regression",
+        "20-year bond auction week 2024-11-18 auc_20y_20241120 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason",
+        "20-year bond auction week 2024-11-18 auc_20y_20241120 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "20-year bond auction week 2024-11-18 auc_20y_20241120 2024-11-20 new bid_to_cover_ratio"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E2_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 1012,
+          "score": 0.06557377049180328
+        },
+        {
+          "evidence_id": "E2_2",
+          "doc_id": "TDIRECT_AUCTIONS_20Y_20241031",
+          "span_start": 0,
+          "span_end": 468,
+          "score": 0.062304405392392875
+        },
+        {
+          "evidence_id": "E2_3",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.06228216228216228
+        },
+        {
+          "evidence_id": "E2_4",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 1013,
+          "span_end": 1351,
+          "score": 0.059322478991596636
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_20Y_20241120",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E2_1",
+            "quote": "These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_20Y_20241120",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 471,
+            "span_end": 669,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "AUC_2Y_20241125",
+      "features_used": {
+        "name": "2-Year Note auction, week of 2024-11-25",
+        "tenor": "2-Year",
+        "auction_date": "2024-11-25",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": null,
+        "size_announced_precutoff": false,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E3_1"
+      ],
+      "queries": [
+        "2-year note auction week 2024-11-25 auc_2y_20241125 bid_to_cover_ratio regression",
+        "2-year note auction week 2024-11-25 auc_2y_20241125 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason",
+        "2-year note auction week 2024-11-25 auc_2y_20241125 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "2-year note auction week 2024-11-25 auc_2y_20241125 new bid_to_cover_ratio"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E3_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.06478053939714437
+        },
+        {
+          "evidence_id": "E3_2",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 1012,
+          "score": 0.06410570100318082
+        },
+        {
+          "evidence_id": "E3_3",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 470,
+          "span_end": 1067,
+          "score": 0.047371031746031744
+        },
+        {
+          "evidence_id": "E3_4",
+          "doc_id": "TDIRECT_AUCTIONS_7Y_20241031",
+          "span_start": 441,
+          "span_end": 1041,
+          "score": 0.04639423076923077
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_2Y_20241125",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E3_1",
+            "quote": "November 2024 Treasury coupon auctions — announced terms and tentative schedule, as of 2024-10-31.\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_2Y_20241125",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "AUC_30Y_20241106",
+      "features_used": {
+        "name": "30-Year Bond auction, 2024-11-06",
+        "tenor": "30-Year",
+        "auction_date": "2024-11-06",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": 25.0,
+        "size_announced_precutoff": true,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E4_1"
+      ],
+      "queries": [
+        "30-year bond auction 2024-11-06 auc_30y_20241106 bid_to_cover_ratio regression",
+        "30-year bond auction 2024-11-06 auc_30y_20241106 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason tenor",
+        "30-year bond auction 2024-11-06 auc_30y_20241106 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "30-year bond auction 2024-11-06 auc_30y_20241106 new bid_to_cover_ratio",
+        "30-year bond auction 2024-11-06 auc_30y_20241106 bid_to_cover_ratio regression offering amount usd bn 25"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E4_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E4_2",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 0,
+          "span_end": 468,
+          "score": 0.07772581027275298
+        },
+        {
+          "evidence_id": "E4_3",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 1068,
+          "span_end": 1640,
+          "score": 0.07756830982637433
+        },
+        {
+          "evidence_id": "E4_4",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 1012,
+          "score": 0.07399501606662733
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_30Y_20241106",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E4_1",
+            "quote": "November 2024 Treasury coupon auctions — announced terms and tentative schedule, as of 2024-10-31.\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_30Y_20241106",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "AUC_3Y_20241104",
+      "features_used": {
+        "name": "3-Year Note auction, 2024-11-04",
+        "tenor": "3-Year",
+        "auction_date": "2024-11-04",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": 58.0,
+        "size_announced_precutoff": true,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E5_1"
+      ],
+      "queries": [
+        "3-year note auction 2024-11-04 auc_3y_20241104 bid_to_cover_ratio regression",
+        "3-year note auction 2024-11-04 auc_3y_20241104 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason tenor",
+        "3-year note auction 2024-11-04 auc_3y_20241104 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "3-year note auction 2024-11-04 auc_3y_20241104 new bid_to_cover_ratio",
+        "3-year note auction 2024-11-04 auc_3y_20241104 bid_to_cover_ratio regression offering amount usd bn 58"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E5_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.0819672131147541
+        },
+        {
+          "evidence_id": "E5_2",
+          "doc_id": "TDIRECT_AUCTIONS_10Y_20241031",
+          "span_start": 470,
+          "span_end": 1061,
+          "score": 0.06233495280197254
+        },
+        {
+          "evidence_id": "E5_3",
+          "doc_id": "TDIRECT_AUCTIONS_3Y_20241031",
+          "span_start": 441,
+          "span_end": 1040,
+          "score": 0.062119801754268796
+        },
+        {
+          "evidence_id": "E5_4",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 470,
+          "span_end": 1067,
+          "score": 0.06112927136028541
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_3Y_20241104",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E5_1",
+            "quote": "November 2024 Treasury coupon auctions — announced terms and tentative schedule, as of 2024-10-31.\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_3Y_20241104",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "AUC_5Y_20241126",
+      "features_used": {
+        "name": "5-Year Note auction, week of 2024-11-25",
+        "tenor": "5-Year",
+        "auction_date": "2024-11-26",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": null,
+        "size_announced_precutoff": false,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E6_1"
+      ],
+      "queries": [
+        "5-year note auction week 2024-11-25 auc_5y_20241126 bid_to_cover_ratio regression",
+        "5-year note auction week 2024-11-25 auc_5y_20241126 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason",
+        "5-year note auction week 2024-11-25 auc_5y_20241126 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "5-year note auction week 2024-11-25 auc_5y_20241126 2024-11-26 new bid_to_cover_ratio"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E6_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 1012,
+          "score": 0.06410570100318082
+        },
+        {
+          "evidence_id": "E6_2",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.06403612252369524
+        },
+        {
+          "evidence_id": "E6_3",
+          "doc_id": "TDIRECT_AUCTIONS_7Y_20241031",
+          "span_start": 441,
+          "span_end": 1041,
+          "score": 0.046634615384615385
+        },
+        {
+          "evidence_id": "E6_4",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 470,
+          "span_end": 1067,
+          "score": 0.04642338900734423
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_5Y_20241126",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E6_1",
+            "quote": "These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_5Y_20241126",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 471,
+            "span_end": 669,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    },
+    {
+      "entity_id": "AUC_7Y_20241127",
+      "features_used": {
+        "name": "7-Year Note auction, week of 2024-11-25",
+        "tenor": "7-Year",
+        "auction_date": "2024-11-27",
+        "new_or_reopening": "new",
+        "offering_amount_usd_bn": null,
+        "size_announced_precutoff": false,
+        "unit": "bid_to_cover_ratio"
+      },
+      "evidence_used": [
+        "E7_1"
+      ],
+      "queries": [
+        "7-year note auction week 2024-11-25 auc_7y_20241127 bid_to_cover_ratio regression",
+        "7-year note auction week 2024-11-25 auc_7y_20241127 using only frozen evidence corpus treasurydirect auction-results tables seven nominal coupon tenors october 2023 through 2024 plus announced november-2024 terms 2024-10-31 cutoff each u.s. treasury table its bid-to-cover ratio total bids tendered divided amount accepted reason",
+        "7-year note auction week 2024-11-25 auc_7y_20241127 bid_to_cover_ratio regression tenor date new reopening offering amount usd bn size announced precutoff unit",
+        "7-year note auction week 2024-11-25 auc_7y_20241127 2024-11-27 new bid_to_cover_ratio"
+      ],
+      "retrieved": [
+        {
+          "evidence_id": "E7_1",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 0,
+          "span_end": 470,
+          "score": 0.06427650713907986
+        },
+        {
+          "evidence_id": "E7_2",
+          "doc_id": "TDIRECT_UPCOMING_20241030",
+          "span_start": 471,
+          "span_end": 1012,
+          "score": 0.06410570100318082
+        },
+        {
+          "evidence_id": "E7_3",
+          "doc_id": "TDIRECT_AUCTIONS_7Y_20241031",
+          "span_start": 441,
+          "span_end": 1041,
+          "score": 0.0471386476426799
+        },
+        {
+          "evidence_id": "E7_4",
+          "doc_id": "TDIRECT_AUCTIONS_30Y_20241031",
+          "span_start": 470,
+          "span_end": 1067,
+          "score": 0.046649531024531024
+        }
+      ],
+      "raw_prediction": {
+        "entity_id": "AUC_7Y_20241127",
+        "interval": {
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "evidence": [
+          {
+            "evidence_id": "E7_1",
+            "quote": "November 2024 Treasury coupon auctions — announced terms and tentative schedule, as of 2024-10-31.\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding"
+          }
+        ],
+        "point_forecast": 0.0
+      },
+      "fallback_used": false,
+      "failure": null,
+      "model_raw": "{\"predictions\": [{\"entity_id\": \"AUC_10Y_20241105\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E1_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_20Y_20241120\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E2_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_2Y_20241125\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E3_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_30Y_20241106\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E4_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_3Y_20241104\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E5_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_5Y_20241126\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E6_1\", \"quote\": \"These sizes are unchanged from the prior quarter's refunding: Treasury stated it believes current auction sizes leave it well positioned and it does not anticipate needing to increase nominal coupon\"}], \"point_forecast\": 0.0}, {\"entity_id\": \"AUC_7Y_20241127\", \"interval\": {\"lo\": -1.0, \"hi\": 1.0}, \"evidence\": [{\"evidence_id\": \"E7_1\", \"quote\": \"November 2024 Treasury coupon auctions \\u2014 announced terms and tentative schedule, as of 2024-10-31.\\nSource: U.S. Department of the Treasury / TreasuryDirect (October 30, 2024 quarterly refunding\"}], \"point_forecast\": 0.0}]}",
+      "final_prediction": {
+        "entity_id": "AUC_7Y_20241127",
+        "point_forecast": 0.0,
+        "interval": {
+          "level": 0.9,
+          "lo": -1.0,
+          "hi": 1.0
+        },
+        "claims": [
+          {
+            "doc_id": "TDIRECT_UPCOMING_20241030",
+            "span_start": 0,
+            "span_end": 193,
+            "claim": "This pre-cutoff passage was used as evidence for the prediction."
+          }
+        ]
+      }
+    }
+  ]
+}

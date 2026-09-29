@@ -2,14 +2,15 @@
 
 ## Executive summary (read this first)
 
-The track's reference retrieval-augmented agent (Baseline 3 in `../README.md`): for each entity
-it retrieves the top-K span-level chunks from the frozen corpus with BM25 (embargo enforced at
-retrieval time), sends them with the entity's tabular features to the house model at
-`$MODEL_ENDPOINT`, and turns the model's quoted evidence into claims with **exact
+The track's reference retrieval-augmented agent (Baseline 3 in `../README.md`) retrieves compact
+span-level evidence cards for every entity with BM25 (embargo enforced before retrieval), sends
+the complete structured table plus batched evidence cards to the house model at
+`$MODEL_ENDPOINT`, and turns the model's card IDs and verbatim quotes into claims with **exact
 `(doc_id, span_start, span_end)` citations** — model-supplied offsets are never trusted; quotes
 are located as verbatim substrings of the corpus, and anything ungroundable is dropped rather
-than cited loosely. One agent for all units, no per-unit tuning; deterministic given the model
-pin and seed (temperature 0, fixed seed, stable tie-breaks).
+than cited loosely. Classification and regression share this task-level path; ranking compares
+the full table and emits globally comparable numeric scores, never per-row optional ranks. One
+agent handles all units without family dispatch; it is deterministic given the model pin and seed.
 
 **Status: scaffold.** Fully runnable end-to-end with `--mock` or any local OpenAI-compatible
 server; quality acceptance (beats `baseline_agent/`, ≥0.80 faithfulness under the pinned judge)
@@ -33,6 +34,10 @@ python -m baselines.strong_rag_baseline.cli \
 
 # wiring smoke run without any model server
 python -m baselines.strong_rag_baseline.cli --task ... --corpus ... --out ... --mock
+
+# retained controlled ablation; not the submission default
+python -m baselines.strong_rag_baseline.cli --task ... --corpus ... --out ... \
+  --mock --prediction-mode entity
 ```
 
 Environment:
@@ -47,6 +52,10 @@ Environment:
 | `T4_TOP_K` | retrieved chunks per entity | `10` |
 | `T4_MODEL_TIMEOUT_S` / `T4_MODEL_RETRIES` | per-call timeout / retry count | `60` / `3` |
 
+Task batching uses bounded defaults for evidence cards, input/output size, and primary requests.
+They are deliberately below the published House ceilings; see `config.py` for the executable
+values and `docs/PHASE3-TASK-LEVEL-PREDICTION.md` for the measured request budget.
+
 Local model example: `ollama serve` + `MODEL_ENDPOINT=http://localhost:11434/v1 MODEL_ID=qwen2.5:7b`.
 
 ## Design
@@ -59,7 +68,24 @@ Local model example: `ollama serve` + `MODEL_ENDPOINT=http://localhost:11434/v1 
 | `prompts.py` | Per-target-type prompt; demands one JSON object with verbatim quotes |
 | `span_finder.py` | Locates quotes as exact substrings (length-preserving curly-quote normalization); never trusts model offsets |
 | `agent.py` | Orchestration; ungroundable quotes fall back to the source chunk's known-good offsets or are dropped; off-vocabulary labels and missing intervals get deterministic fallbacks |
+| `task_context.py` | Complete structured entity table, cutoff-safe evidence cards, and deterministic dynamic batching |
+| `task_predictor.py` | Joint classification/regression/ranking prediction, one constrained repair, and local quote-to-offset grounding |
 | `formatter.py` | Final answer assembly + hard self-check (spans resolve, intervals complete, `notes` is an object) |
+
+## Competition Docker candidate
+
+The candidate is standard-library only and contains no local neural weights or development NLI
+models. Build it from the repository root:
+
+```bash
+docker buildx build --platform linux/amd64 \
+  -f baselines/strong_rag_baseline/Dockerfile \
+  -t t4-task-agent:dev --load .
+```
+
+The base is pinned by linux/amd64 manifest digest. The normal harness invocation supplies the
+House environment and the leading `analyze` verb. With no endpoint, the same image produces a
+complete deterministic fallback rather than shrinking the roster.
 
 **BM25 only, no dense retrieval** (deviation from the Baseline-3 sketch in `../README.md`): the
 eval sandbox's restricted network cannot fetch embedding weights at run time, so a lexical index

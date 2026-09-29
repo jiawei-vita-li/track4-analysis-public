@@ -24,6 +24,11 @@ class Config:
     max_output_tokens: int
     unit_timeout_s: float  # stop early enough to serialize a fallback answer
     temperature: float  # fixed at 0 for determinism; env override for experiments
+    evidence_per_entity: int = 4
+    batch_max_entities: int = 20
+    batch_max_input_chars: int = 48_000
+    batch_max_output_chars: int = 12_000
+    max_primary_requests: int = 5
 
     @staticmethod
     def from_env() -> "Config":
@@ -45,4 +50,19 @@ class Config:
                 540.0, max(1.0, float(os.environ.get("T4_UNIT_TIMEOUT_S", "540")))
             ),
             temperature=float(os.environ.get("T4_TEMPERATURE", "0")),
+            evidence_per_entity=min(
+                8, max(1, int(os.environ.get("T4_EVIDENCE_PER_ENTITY", "4")))
+            ),
+            batch_max_entities=min(
+                50, max(1, int(os.environ.get("T4_BATCH_MAX_ENTITIES", "20")))
+            ),
+            batch_max_input_chars=min(
+                100_000, max(8_000, int(os.environ.get("T4_BATCH_MAX_INPUT_CHARS", "48000")))
+            ),
+            batch_max_output_chars=min(
+                14_000, max(2_000, int(os.environ.get("T4_BATCH_MAX_OUTPUT_CHARS", "12000")))
+            ),
+            max_primary_requests=min(
+                5, max(1, int(os.environ.get("T4_MAX_PRIMARY_REQUESTS", "5")))
+            ),
         )

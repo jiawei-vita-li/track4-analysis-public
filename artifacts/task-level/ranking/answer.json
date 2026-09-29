@@ -1,0 +1,183 @@
+{
+  "task_id": "t4-cotpos-202411-us10",
+  "schema_version": "3",
+  "entity_predictions": [
+    {
+      "entity_id": "CORN_CBT",
+      "point_forecast": 17840.0,
+      "interval": {
+        "level": 0.9,
+        "lo": 8920.0,
+        "hi": 26760.0
+      },
+      "claims": [
+        {
+          "doc_id": "COT_CORN_CBT_20241025",
+          "span_start": 0,
+          "span_end": 196,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "ES_SP500",
+      "point_forecast": 22981.000000001,
+      "interval": {
+        "level": 0.9,
+        "lo": 11490.5000000005,
+        "hi": 34471.5000000015
+      },
+      "claims": [
+        {
+          "doc_id": "COT_ES_SP500_20241025",
+          "span_start": 0,
+          "span_end": 195,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "EURO_FX",
+      "point_forecast": -28523.999999998,
+      "interval": {
+        "level": 0.9,
+        "lo": -42785.999999997,
+        "hi": -14261.999999999
+      },
+      "claims": [
+        {
+          "doc_id": "COT_EURO_FX_20241025",
+          "span_start": 0,
+          "span_end": 199,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "GOLD_CMX",
+      "point_forecast": 296204.000000003,
+      "interval": {
+        "level": 0.9,
+        "lo": 148102.0000000015,
+        "hi": 444306.00000000454
+      },
+      "claims": [
+        {
+          "doc_id": "COT_GOLD_CMX_20241025",
+          "span_start": 0,
+          "span_end": 195,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "JPY_CME",
+      "point_forecast": 12771.000000004,
+      "interval": {
+        "level": 0.9,
+        "lo": 6385.500000002,
+        "hi": 19156.500000006
+      },
+      "claims": [
+        {
+          "doc_id": "COT_JPY_CME_20241025",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "NATGAS_NYMEX",
+      "point_forecast": -166184.999999995,
+      "interval": {
+        "level": 0.9,
+        "lo": -249277.4999999925,
+        "hi": -83092.4999999975
+      },
+      "claims": [
+        {
+          "doc_id": "COT_NATGAS_NYMEX_20241025",
+          "span_start": 0,
+          "span_end": 195,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "SILVER_CMX",
+      "point_forecast": 66355.000000006,
+      "interval": {
+        "level": 0.9,
+        "lo": 33177.500000003,
+        "hi": 99532.500000009
+      },
+      "claims": [
+        {
+          "doc_id": "COT_SILVER_CMX_20241025",
+          "span_start": 0,
+          "span_end": 197,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "UST_10Y",
+      "point_forecast": -848190.999999993,
+      "interval": {
+        "level": 0.9,
+        "lo": -1272286.4999999895,
+        "hi": -424095.4999999965
+      },
+      "claims": [
+        {
+          "doc_id": "COT_UST_2Y_20241025",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "UST_2Y",
+      "point_forecast": -1380909.999999992,
+      "interval": {
+        "level": 0.9,
+        "lo": -2071364.9999999881,
+        "hi": -690454.999999996
+      },
+      "claims": [
+        {
+          "doc_id": "COT_UST_2Y_20241025",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    },
+    {
+      "entity_id": "WTI_NYMEX",
+      "point_forecast": 173731.000000009,
+      "interval": {
+        "level": 0.9,
+        "lo": 86865.5000000045,
+        "hi": 260596.5000000135
+      },
+      "claims": [
+        {
+          "doc_id": "COT_WTI_NYMEX_20241025",
+          "span_start": 0,
+          "span_end": 199,
+          "claim": "This pre-cutoff passage was used as evidence for the prediction."
+        }
+      ]
+    }
+  ],
+  "evidence_trace": "strong_rag_baseline: BM25 span-chunk retrieval + $MODEL_ENDPOINT. 10 grounded claims kept, 0 ungroundable evidence items dropped. All cited spans resolved in the frozen corpus; embargo enforced at retrieval time.",
+  "notes": {
+    "agent": "strong_rag_baseline",
+    "retrieval": "bm25-span-chunks",
+    "dropped_evidence_items": 0
+  },
+  "target_type": "ranking"
+}

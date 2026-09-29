@@ -10,7 +10,12 @@ import pytest
 from baselines.strong_rag_baseline.agent import EntityResult
 from baselines.strong_rag_baseline.indexer import Chunk, IndexedCorpus
 from baselines.strong_rag_baseline.formatter import build_answer
-from baselines.strong_rag_baseline.safety import ContractError, preflight, sanitize_results
+from baselines.strong_rag_baseline.safety import (
+    ContractError,
+    preflight,
+    sanitize_results,
+    task_target_type,
+)
 
 
 def corpus() -> IndexedCorpus:
@@ -104,3 +109,13 @@ def test_no_pre_cutoff_evidence_fails_closed() -> None:
 
     with pytest.raises(ContractError, match="no dated pre-cutoff"):
         sanitize_results(current_task, [], late)
+
+
+def test_top_level_target_type_is_supported_and_preferred() -> None:
+    current_task = task("classification")
+    current_task["target_type"] = "ranking"
+    assert task_target_type(current_task) == "ranking"
+
+    answer = build_answer(current_task, [], corpus())
+    assert answer["target_type"] == "ranking"
+    assert all("label" not in row for row in answer["entity_predictions"])

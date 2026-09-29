@@ -118,8 +118,10 @@ class MockModelClient:
     """Test double: returns canned text, or delegates to a callable."""
 
     reply: str | Callable[[str, str], str]
+    request_count: int = field(init=False, default=0)
 
     def complete(self, system: str, user: str) -> str:
+        self.request_count += 1
         if callable(self.reply):
             return self.reply(system, user)
         return self.reply

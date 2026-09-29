@@ -10,6 +10,7 @@ from __future__ import annotations
 from .agent import EntityResult
 from .indexer import IndexedCorpus
 from .safety import preflight, sanitize_results
+from .safety import task_target_type
 
 
 def build_answer(
@@ -34,6 +35,9 @@ def build_answer(
             "dropped_evidence_items": total_dropped,
         },
     }
+    declared_target_type = task_target_type(task)
+    if declared_target_type is not None:
+        answer["target_type"] = declared_target_type
     preflight(task, answer, corpus)
     return answer
 

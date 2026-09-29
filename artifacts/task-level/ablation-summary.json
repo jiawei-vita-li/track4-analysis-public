@@ -1,0 +1,928 @@
+{
+  "limitations": "Public units have no outcomes; no predictive-quality or calibration claim is made.",
+  "units": {
+    "t4-EXAMPLE-eps-beat": [
+      {
+        "variant": "P0-entity",
+        "request_count": 1,
+        "latency_ms": 2.234,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 1.901,
+        "batch_count": 1,
+        "entities_per_batch": [
+          1
+        ],
+        "estimated_input_chars": [
+          1233
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 2.363,
+        "batch_count": 1,
+        "entities_per_batch": [
+          1
+        ],
+        "estimated_input_chars": [
+          3587
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 2.404,
+        "batch_count": 1,
+        "entities_per_batch": [
+          1
+        ],
+        "estimated_input_chars": [
+          3587
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-auction-btc-202411-us7": [
+      {
+        "variant": "P0-entity",
+        "request_count": 7,
+        "latency_ms": 28.102,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 18.861,
+        "batch_count": 1,
+        "entities_per_batch": [
+          7
+        ],
+        "estimated_input_chars": [
+          4460
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 18.393,
+        "batch_count": 1,
+        "entities_per_batch": [
+          7
+        ],
+        "estimated_input_chars": [
+          22311
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 18.031,
+        "batch_count": 1,
+        "entities_per_batch": [
+          7
+        ],
+        "estimated_input_chars": [
+          22311
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-cotpos-202411-us10": [
+      {
+        "variant": "P0-entity",
+        "request_count": 10,
+        "latency_ms": 71.119,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 10,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 71.171,
+        "batch_count": 1,
+        "entities_per_batch": [
+          10
+        ],
+        "estimated_input_chars": [
+          7212
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 10,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 70.213,
+        "batch_count": 1,
+        "entities_per_batch": [
+          10
+        ],
+        "estimated_input_chars": [
+          25905
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 10,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 73.395,
+        "batch_count": 1,
+        "entities_per_batch": [
+          10
+        ],
+        "estimated_input_chars": [
+          25905
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 10,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-cpicomp-202410-us11": [
+      {
+        "variant": "P0-entity",
+        "request_count": 11,
+        "latency_ms": 43.068,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 45.892,
+        "batch_count": 1,
+        "entities_per_batch": [
+          11
+        ],
+        "estimated_input_chars": [
+          6297
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 44.548,
+        "batch_count": 1,
+        "entities_per_batch": [
+          11
+        ],
+        "estimated_input_chars": [
+          32498
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 43.497,
+        "batch_count": 1,
+        "entities_per_batch": [
+          11
+        ],
+        "estimated_input_chars": [
+          32498
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-credit-event-2023": [
+      {
+        "variant": "P0-entity",
+        "request_count": 8,
+        "latency_ms": 3097.482,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 3258.424,
+        "batch_count": 1,
+        "entities_per_batch": [
+          8
+        ],
+        "estimated_input_chars": [
+          3072
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 3234.323,
+        "batch_count": 1,
+        "entities_per_batch": [
+          8
+        ],
+        "estimated_input_chars": [
+          18849
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 3142.241,
+        "batch_count": 1,
+        "entities_per_batch": [
+          8
+        ],
+        "estimated_input_chars": [
+          18849
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-eps-growth-2024Q3-banks": [
+      {
+        "variant": "P0-entity",
+        "request_count": 8,
+        "latency_ms": 5830.449,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 5793.477,
+        "batch_count": 1,
+        "entities_per_batch": [
+          8
+        ],
+        "estimated_input_chars": [
+          5557
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 5810.748,
+        "batch_count": 1,
+        "entities_per_batch": [
+          8
+        ],
+        "estimated_input_chars": [
+          23960
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 5759.798,
+        "batch_count": 1,
+        "entities_per_batch": [
+          8
+        ],
+        "estimated_input_chars": [
+          23960
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-eps-yoy-2023Q2-mixed": [
+      {
+        "variant": "P0-entity",
+        "request_count": 6,
+        "latency_ms": 884.427,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 898.592,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          4339
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 875.861,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          17424
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 885.008,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          17424
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-fomc-curve-20220728": [
+      {
+        "variant": "P0-entity",
+        "request_count": 6,
+        "latency_ms": 6.653,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 6.193,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          3402
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 6.616,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          16908
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 6.528,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          16908
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-fomc-curve-20240918": [
+      {
+        "variant": "P0-entity",
+        "request_count": 6,
+        "latency_ms": 13.531,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 12.589,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          3461
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 14.026,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          18215
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 12.805,
+        "batch_count": 1,
+        "entities_per_batch": [
+          6
+        ],
+        "estimated_input_chars": [
+          18215
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-macrorev-20240930-us6": [
+      {
+        "variant": "P0-entity",
+        "request_count": 12,
+        "latency_ms": 47.559,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 47.528,
+        "batch_count": 1,
+        "entities_per_batch": [
+          12
+        ],
+        "estimated_input_chars": [
+          9386
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 48.351,
+        "batch_count": 1,
+        "entities_per_batch": [
+          12
+        ],
+        "estimated_input_chars": [
+          40422
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 48.899,
+        "batch_count": 1,
+        "entities_per_batch": [
+          12
+        ],
+        "estimated_input_chars": [
+          40422
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ],
+    "t4-postearn-20240201-megacap": [
+      {
+        "variant": "P0-entity",
+        "request_count": 3,
+        "latency_ms": 349.38,
+        "batch_count": null,
+        "entities_per_batch": null,
+        "estimated_input_chars": null,
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P1-task-structured",
+        "request_count": 1,
+        "latency_ms": 344.268,
+        "batch_count": 1,
+        "entities_per_batch": [
+          3
+        ],
+        "estimated_input_chars": [
+          2662
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P2-task-evidence",
+        "request_count": 1,
+        "latency_ms": 342.518,
+        "batch_count": 1,
+        "entities_per_batch": [
+          3
+        ],
+        "estimated_input_chars": [
+          8247
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true
+      },
+      {
+        "variant": "P3-final-safety",
+        "request_count": 1,
+        "latency_ms": 330.678,
+        "batch_count": 1,
+        "entities_per_batch": [
+          3
+        ],
+        "estimated_input_chars": [
+          8247
+        ],
+        "fallback_count": 0,
+        "schema": true,
+        "roster_complete": true,
+        "citation_spans": true,
+        "cutoff": true,
+        "finite_points": true,
+        "point_diversity": 1,
+        "ranking_consistent": true,
+        "matches_p2_answer": true
+      }
+    ]
+  },
+  "summary": [
+    {
+      "variant": "P0-entity",
+      "units": 11,
+      "requests": 78,
+      "max_requests_per_unit": 12,
+      "all_schema": true,
+      "all_rosters": true,
+      "all_citations": true,
+      "all_cutoff": true,
+      "all_ranking_consistent": true,
+      "fallbacks": 0,
+      "latency_ms": 10374.004
+    },
+    {
+      "variant": "P1-task-structured",
+      "units": 11,
+      "requests": 11,
+      "max_requests_per_unit": 1,
+      "all_schema": true,
+      "all_rosters": true,
+      "all_citations": true,
+      "all_cutoff": true,
+      "all_ranking_consistent": true,
+      "fallbacks": 0,
+      "latency_ms": 10498.896
+    },
+    {
+      "variant": "P2-task-evidence",
+      "units": 11,
+      "requests": 11,
+      "max_requests_per_unit": 1,
+      "all_schema": true,
+      "all_rosters": true,
+      "all_citations": true,
+      "all_cutoff": true,
+      "all_ranking_consistent": true,
+      "fallbacks": 0,
+      "latency_ms": 10467.96
+    },
+    {
+      "variant": "P3-final-safety",
+      "units": 11,
+      "requests": 11,
+      "max_requests_per_unit": 1,
+      "all_schema": true,
+      "all_rosters": true,
+      "all_citations": true,
+      "all_cutoff": true,
+      "all_ranking_consistent": true,
+      "fallbacks": 0,
+      "latency_ms": 10323.284
+    }
+  ]
+}
