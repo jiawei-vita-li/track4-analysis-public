@@ -142,10 +142,18 @@ def run(
     task = json.loads(task_path.read_text(encoding="utf-8"))
     corpus = build_index(corpus_dir)
     index = BM25Index(corpus.chunks, task["cutoff_date"])
-    results = [
-        run_entity(task, entity, index, corpus, client, top_k)
-        for entity in task.get("entities", [])
-    ]
+    results = []
+    for entity in task.get("entities", []):
+        try:
+            results.append(run_entity(task, entity, index, corpus, client, top_k))
+        except Exception as exc:
+            # Never shrink the trusted roster.  The formatter's contract layer
+            # deterministically fills this missing row with a safe fallback.
+            print(
+                f"warning: {entity.get('entity_id')}: model/retrieval result discarded: "
+                f"{type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
     answer = build_answer(task, results, corpus)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(

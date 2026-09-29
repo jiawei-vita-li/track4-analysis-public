@@ -1,13 +1,40 @@
 """Component tests: indexer offsets, BM25 embargo/determinism, span finding."""
 from __future__ import annotations
 
+import json
+import shutil
 from pathlib import Path
+
+import pytest
 
 from baselines.strong_rag_baseline.indexer import Chunk, build_index
 from baselines.strong_rag_baseline.retriever import BM25Index
 from baselines.strong_rag_baseline.span_finder import find_span
 
 EXAMPLE_UNIT = Path(__file__).resolve().parents[3] / "units" / "t4-EXAMPLE-eps-beat"
+
+
+def test_index_ignores_unmanifested_json(tmp_path: Path) -> None:
+    unit = tmp_path / "unit"
+    shutil.copytree(EXAMPLE_UNIT, unit)
+    (unit / "corpus" / "UNDECLARED.json").write_text(
+        json.dumps({"doc_id": "UNDECLARED", "doc_date": "2024-01-01", "text": "leak"}),
+        encoding="utf-8",
+    )
+
+    corpus = build_index(unit / "corpus")
+
+    assert "UNDECLARED" not in corpus.doc_texts
+
+
+def test_index_rejects_manifest_digest_mismatch(tmp_path: Path) -> None:
+    unit = tmp_path / "unit"
+    shutil.copytree(EXAMPLE_UNIT, unit)
+    declared = unit / "corpus" / "EDGAR_0000320193_8K_20240201.json"
+    declared.write_text(declared.read_text(encoding="utf-8") + " ", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="digest mismatch"):
+        build_index(unit / "corpus")
 
 
 def test_chunk_offsets_resolve_in_joined_text():

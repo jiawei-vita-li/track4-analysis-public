@@ -9,11 +9,13 @@ from __future__ import annotations
 
 from .agent import EntityResult
 from .indexer import IndexedCorpus
+from .safety import preflight, sanitize_results
 
 
 def build_answer(
     task: dict, results: list[EntityResult], corpus: IndexedCorpus
 ) -> dict:
+    results = sanitize_results(task, results, corpus)
     total_dropped = sum(r.dropped_claims for r in results)
     total_claims = sum(len(r.prediction["claims"]) for r in results)
     answer = {
@@ -32,7 +34,7 @@ def build_answer(
             "dropped_evidence_items": total_dropped,
         },
     }
-    _assert_valid(answer, corpus)
+    preflight(task, answer, corpus)
     return answer
 
 

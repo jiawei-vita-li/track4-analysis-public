@@ -9,6 +9,7 @@ for free — no separate span search needed for chunk-level citations.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -41,16 +42,53 @@ def _iter_span_texts(doc: dict) -> list[str]:
     return []
 
 
+def _declared_paths(corpus_dir: Path) -> list[tuple[Path, str]]:
+    candidates = [corpus_dir.parent / _MANIFEST_NAME, corpus_dir / _MANIFEST_NAME]
+    manifest_path = next((path for path in candidates if path.is_file()), None)
+    if manifest_path is None:
+        raise ValueError("corpus has no trusted manifest.json")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    files = manifest.get("files")
+    if not isinstance(files, list):
+        raise ValueError("corpus manifest has no files[] array")
+    declared: list[tuple[Path, str]] = []
+    for entry in files:
+        if not isinstance(entry, dict) or entry.get("role") != "corpus":
+            continue
+        relative = entry.get("path")
+        digest = entry.get("sha256")
+        if relative == f"corpus/{_MANIFEST_NAME}":
+            continue
+        if (
+            not isinstance(relative, str)
+            or not relative.startswith("corpus/")
+            or "/" in relative[len("corpus/") :]
+            or not relative.endswith(".json")
+            or not isinstance(digest, str)
+            or len(digest) != 64
+        ):
+            raise ValueError(f"invalid corpus manifest entry: {entry!r}")
+        declared.append((corpus_dir / relative[len("corpus/") :], digest))
+    if not declared:
+        raise ValueError("corpus manifest declares no corpus documents")
+    return sorted(declared, key=lambda item: item[0].name)
+
+
 def build_index(corpus_dir: str | Path) -> IndexedCorpus:
-    """Index every corpus document under ``corpus_dir`` (skips the manifest)."""
+    """Index only digest-verified documents declared by the trusted manifest."""
+    corpus_dir = Path(corpus_dir)
     chunks: list[Chunk] = []
     doc_texts: dict[str, str] = {}
     doc_dates: dict[str, str | None] = {}
-    for path in sorted(Path(corpus_dir).glob("*.json")):
-        if path.name == _MANIFEST_NAME:
-            continue
-        doc = json.loads(path.read_text(encoding="utf-8"))
-        doc_id = doc.get("doc_id", path.stem)
+    for path, expected_digest in _declared_paths(corpus_dir):
+        raw = path.read_bytes()
+        observed_digest = hashlib.sha256(raw).hexdigest()
+        if observed_digest != expected_digest:
+            raise ValueError(f"manifest digest mismatch for {path.name}")
+        doc = json.loads(raw.decode("utf-8"))
+        doc_id = path.stem
+        if doc.get("doc_id", doc_id) != doc_id:
+            raise ValueError(f"document doc_id does not match declared path: {path.name}")
         doc_date = doc.get("doc_date")
         offset = 0
         parts: list[str] = []

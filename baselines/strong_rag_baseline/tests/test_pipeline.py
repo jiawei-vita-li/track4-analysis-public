@@ -109,3 +109,20 @@ def test_mock_cli_flag_smoke(tmp_path):
     assert exit_code == 0
     answer = json.loads((tmp_path / "answer.json").read_text())
     assert answer["entity_predictions"]
+
+
+def test_model_exception_uses_complete_fallback(tmp_path):
+    class FailingClient:
+        def complete(self, system: str, user: str) -> str:
+            raise TimeoutError("synthetic timeout")
+
+    answer = run(
+        task_path=EXAMPLE_UNIT / "task.json",
+        corpus_dir=EXAMPLE_UNIT / "corpus",
+        out_path=tmp_path / "answer.json",
+        client=FailingClient(),
+        top_k=5,
+    )
+
+    assert [row["entity_id"] for row in answer["entity_predictions"]] == ["AAPL"]
+    assert answer["entity_predictions"][0]["claims"]

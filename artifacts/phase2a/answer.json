@@ -1,0 +1,30 @@
+{
+  "task_id": "t4-EXAMPLE-eps-beat",
+  "schema_version": "3",
+  "entity_predictions": [
+    {
+      "entity_id": "AAPL",
+      "point_forecast": 0.0,
+      "interval": {
+        "level": 0.9,
+        "lo": -1.0,
+        "hi": 1.0
+      },
+      "claims": [
+        {
+          "doc_id": "EDGAR_0000320193_8K_20240201",
+          "span_start": 0,
+          "span_end": 193,
+          "claim": "Mock baseline: the cited passage from EDGAR_0000320193_8K_20240201 is the top-ranked pre-cutoff excerpt retrieved for this entity."
+        }
+      ],
+      "label": "beat"
+    }
+  ],
+  "evidence_trace": "strong_rag_baseline: BM25 span-chunk retrieval + $MODEL_ENDPOINT. 1 grounded claims kept, 0 ungroundable evidence items dropped. All cited spans resolved in the frozen corpus; embargo enforced at retrieval time.",
+  "notes": {
+    "agent": "strong_rag_baseline",
+    "retrieval": "bm25-span-chunks",
+    "dropped_evidence_items": 0
+  }
+}
