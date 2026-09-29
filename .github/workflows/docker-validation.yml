@@ -173,7 +173,7 @@ jobs:
             -e MODEL_NAME=unavailable-test \
             -e MODEL_TOKEN=not-a-secret \
             -e T4_MODEL_TIMEOUT_S=2 \
-            -e T4_MODEL_RETRIES=0 \
+            -e T4_MODEL_RETRIES=1 \
             -e T4_UNIT_TIMEOUT_S=20
 
           if (( failures > 0 )); then
