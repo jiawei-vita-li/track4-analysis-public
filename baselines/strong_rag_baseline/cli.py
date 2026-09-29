@@ -138,11 +138,13 @@ def run(
     out_path: Path,
     client: ModelClient,
     top_k: int,
+    trace_path: Path | None = None,
 ) -> dict:
     task = json.loads(task_path.read_text(encoding="utf-8"))
     corpus = build_index(corpus_dir)
     index = BM25Index(corpus.chunks, task["cutoff_date"])
     results = []
+    failures: dict[str, str] = {}
     for entity in task.get("entities", []):
         try:
             results.append(run_entity(task, entity, index, corpus, client, top_k))
@@ -154,6 +156,7 @@ def run(
                 f"{type(exc).__name__}: {exc}",
                 file=sys.stderr,
             )
+            failures[str(entity.get("entity_id", ""))] = f"{type(exc).__name__}: {exc}"
     answer = build_answer(task, results, corpus)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     temporary = out_path.with_name(out_path.name + ".tmp")
@@ -161,6 +164,33 @@ def run(
         json.dumps(answer, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     temporary.replace(out_path)
+    if trace_path is not None:
+        by_id = {result.prediction.get("entity_id"): result for result in results}
+        trace = {
+            "task_id": task.get("task_id"),
+            "request_count": getattr(client, "request_count", 0),
+            "entities": [],
+        }
+        for row in answer["entity_predictions"]:
+            entity_id = row["entity_id"]
+            result = by_id.get(entity_id)
+            entity_trace = dict(result.trace) if result is not None else {
+                "entity_id": entity_id,
+                "queries": [],
+                "retrieved": [],
+                "latency_ms": {},
+            }
+            entity_trace["fallback_used"] = result is None or row != result.prediction
+            entity_trace["failure"] = failures.get(entity_id)
+            entity_trace["model_raw"] = result.model_raw if result is not None else None
+            entity_trace["final_prediction"] = row
+            trace["entities"].append(entity_trace)
+        trace_path.parent.mkdir(parents=True, exist_ok=True)
+        trace_temporary = trace_path.with_name(trace_path.name + ".tmp")
+        trace_temporary.write_text(
+            json.dumps(trace, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
+        trace_temporary.replace(trace_path)
     return answer
 
 
@@ -172,6 +202,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--task", type=Path, required=True)
     parser.add_argument("--corpus", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--trace", type=Path, help="Optional debug trace; never written into answer.json.")
     parser.add_argument(
         "--mock",
         action="store_true",
@@ -183,7 +214,7 @@ def main(argv: list[str] | None = None) -> int:
     client: ModelClient = (
         MockModelClient(reply=_mock_reply) if args.mock else HTTPModelClient(config)
     )
-    answer = run(args.task, args.corpus, args.out, client, config.top_k)
+    answer = run(args.task, args.corpus, args.out, client, config.top_k, args.trace)
     n_claims = sum(len(e["claims"]) for e in answer["entity_predictions"])
     print(
         f"wrote {args.out} — {len(answer['entity_predictions'])} entities, "

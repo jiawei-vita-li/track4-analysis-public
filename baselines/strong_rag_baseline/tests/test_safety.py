@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import math
+import importlib.resources as resources
+import json
 
+import jsonschema
 import pytest
 
 from baselines.strong_rag_baseline.agent import EntityResult
 from baselines.strong_rag_baseline.indexer import Chunk, IndexedCorpus
+from baselines.strong_rag_baseline.formatter import build_answer
 from baselines.strong_rag_baseline.safety import ContractError, preflight, sanitize_results
 
 
@@ -51,6 +55,11 @@ def test_missing_results_become_complete_safe_roster(target_type: str) -> None:
         assert all(row["label"] == "yes" for row in answer["entity_predictions"])
     else:
         assert all("label" not in row for row in answer["entity_predictions"])
+
+    official = build_answer(current_task, repaired, corpus())
+    schema_path = resources.files("qfbench2_common") / "schemas" / "analysis.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator(schema).validate(official)
 
 
 def test_bad_numbers_claims_and_duplicate_results_are_repaired() -> None:

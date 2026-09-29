@@ -63,6 +63,11 @@ def test_bm25_drops_post_cutoff_and_undated_docs():
     assert [h.chunk.doc_id for h in hits] == ["ok"]
 
 
+def test_bm25_rejects_non_calendar_dates():
+    with pytest.raises(ValueError):
+        BM25Index([make_chunk("bad", "text", date="2024-02-31")], "2024-03-15")
+
+
 def test_bm25_ranking_is_deterministic_and_relevant():
     chunks = [
         make_chunk("a", "iphone demand stable in international markets"),

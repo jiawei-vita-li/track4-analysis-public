@@ -16,6 +16,7 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
+from datetime import date
 
 from .indexer import Chunk
 
@@ -38,10 +39,11 @@ class BM25Index:
     """Okapi BM25 over a fixed chunk list (embargo applied at build time)."""
 
     def __init__(self, chunks: list[Chunk], cutoff_date: str) -> None:
+        cutoff = date.fromisoformat(cutoff_date)
         self.chunks = [
             c
             for c in chunks
-            if c.doc_date is not None and c.doc_date <= cutoff_date
+            if c.doc_date is not None and date.fromisoformat(c.doc_date) <= cutoff
         ]
         self._chunk_tokens = [_tokens(c.text) for c in self.chunks]
         self._doc_freq: dict[str, int] = {}

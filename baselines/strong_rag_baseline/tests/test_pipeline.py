@@ -116,13 +116,18 @@ def test_model_exception_uses_complete_fallback(tmp_path):
         def complete(self, system: str, user: str) -> str:
             raise TimeoutError("synthetic timeout")
 
+    trace_path = tmp_path / "trace.json"
     answer = run(
         task_path=EXAMPLE_UNIT / "task.json",
         corpus_dir=EXAMPLE_UNIT / "corpus",
         out_path=tmp_path / "answer.json",
         client=FailingClient(),
         top_k=5,
+        trace_path=trace_path,
     )
 
     assert [row["entity_id"] for row in answer["entity_predictions"]] == ["AAPL"]
     assert answer["entity_predictions"][0]["claims"]
+    trace = json.loads(trace_path.read_text(encoding="utf-8"))
+    assert trace["entities"][0]["fallback_used"] is True
+    assert "TimeoutError" in trace["entities"][0]["failure"]

@@ -12,12 +12,14 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from datetime import date
 from dataclasses import dataclass
 from pathlib import Path
 
 _MANIFEST_NAME = "manifest.json"
 _MAX_CHUNK_CHARS = 600
 _SENTENCE_BREAK = re.compile(r"(?<=[.!?])\s+")
+_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 @dataclass(frozen=True)
@@ -97,7 +99,7 @@ def _declared_paths(corpus_dir: Path) -> list[tuple[Path, str]]:
             or "/" in relative[len("corpus/") :]
             or not relative.endswith(".json")
             or not isinstance(digest, str)
-            or len(digest) != 64
+            or re.fullmatch(r"[0-9a-f]{64}", digest) is None
         ):
             raise ValueError(f"invalid corpus manifest entry: {entry!r}")
         declared.append((corpus_dir / relative[len("corpus/") :], digest))
@@ -113,6 +115,8 @@ def build_index(corpus_dir: str | Path) -> IndexedCorpus:
     doc_texts: dict[str, str] = {}
     doc_dates: dict[str, str | None] = {}
     for path, expected_digest in _declared_paths(corpus_dir):
+        if path.is_symlink():
+            raise ValueError(f"declared corpus path is a symlink: {path.name}")
         raw = path.read_bytes()
         observed_digest = hashlib.sha256(raw).hexdigest()
         if observed_digest != expected_digest:
@@ -122,6 +126,12 @@ def build_index(corpus_dir: str | Path) -> IndexedCorpus:
         if doc.get("doc_id", doc_id) != doc_id:
             raise ValueError(f"document doc_id does not match declared path: {path.name}")
         doc_date = doc.get("doc_date")
+        if not isinstance(doc_date, str) or _ISO_DATE.fullmatch(doc_date) is None:
+            raise ValueError(f"document has no canonical doc_date: {path.name}")
+        try:
+            date.fromisoformat(doc_date)
+        except ValueError as exc:
+            raise ValueError(f"document has invalid doc_date: {path.name}") from exc
         offset = 0
         parts: list[str] = []
         for text in _iter_span_texts(doc):

@@ -168,6 +168,7 @@ def sanitize_results(
                 prediction=prediction,
                 dropped_claims=(original.dropped_claims if original else 0),
                 model_raw=(original.model_raw if original else "fallback: missing entity result"),
+                trace=(original.trace if original else {"entity_id": entity_id, "fallback_used": True}),
             )
         )
     return sanitized

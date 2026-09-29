@@ -13,10 +13,14 @@ import json
 from .indexer import Chunk
 
 SYSTEM_PROMPT = """\
-You are a careful financial analyst. You predict a target for one entity using ONLY the
+You are a careful evidence-grounded forecaster. You predict a target for one entity using ONLY the
 evidence excerpts provided — no outside knowledge about events after the stated cutoff date.
 You must respond with a single JSON object and nothing else. Every evidence quote you return
-must be copied verbatim, character for character, from one of the provided excerpts."""
+must be copied verbatim, character for character, from one of the provided excerpts.
+Select passages that support the final label or point forecast, not passages that are merely
+about the same topic. If no passage directly supports a strong prediction, prefer explicit
+forecast/guidance language and make the prediction more conservative. The evaluator derives its
+hypothesis from your prediction fields; polished claim prose cannot substitute for support."""
 
 _TARGET_INSTRUCTIONS = {
     "classification": (
@@ -29,8 +33,8 @@ _TARGET_INSTRUCTIONS = {
         '"label" may be null.'
     ),
     "ranking": (
-        'Set "rank" to this entity\'s predicted rank (1 = highest). '
-        '"point_forecast" is the predicted metric value.'
+        'Set "point_forecast" to the predicted metric value used for ordering. '
+        'Do not emit "rank"; ranking is derived globally from point_forecast values.'
     ),
 }
 
@@ -63,7 +67,6 @@ def build_user_prompt(
     schema = {
         "label": "string or null",
         "point_forecast": "number or null",
-        "rank": "integer, ranking tasks only",
         "interval": {
             "level": interval_level,
             "lo": "number",

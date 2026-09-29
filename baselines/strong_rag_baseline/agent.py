@@ -9,7 +9,8 @@ faithfulness gate, while a dropped one merely loses a little coverage.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 
 from .client import ModelClient
 from .indexer import Chunk, IndexedCorpus
@@ -23,6 +24,7 @@ class EntityResult:
     prediction: dict  # entity_predictions[] element
     dropped_claims: int
     model_raw: str
+    trace: dict = field(default_factory=dict)
 
 
 def _parse_model_json(raw: str) -> dict:
@@ -118,9 +120,15 @@ def run_entity(
     client: ModelClient,
     top_k: int,
 ) -> EntityResult:
+    started = time.perf_counter()
     queries = build_queries(task, entity)
-    retrieved = [s.chunk for s in index.search_multi(queries, top_k, fusion="rrf")]
+    retrieval_started = time.perf_counter()
+    scored = index.search_multi(queries, top_k, fusion="rrf")
+    retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
+    retrieved = [item.chunk for item in scored]
+    model_started = time.perf_counter()
     raw = client.complete(SYSTEM_PROMPT, build_user_prompt(task, entity, retrieved))
+    model_ms = (time.perf_counter() - model_started) * 1000
     parsed = _parse_model_json(raw)
 
     target = task.get("target", {})
@@ -146,4 +154,27 @@ def run_entity(
     }
     if target.get("type") == "ranking" and isinstance(parsed.get("rank"), int):
         prediction["rank"] = parsed["rank"]
-    return EntityResult(prediction=prediction, dropped_claims=dropped, model_raw=raw)
+    return EntityResult(
+        prediction=prediction,
+        dropped_claims=dropped,
+        model_raw=raw,
+        trace={
+            "entity_id": entity.get("entity_id", ""),
+            "queries": queries,
+            "retrieved": [
+                {
+                    "doc_id": item.chunk.doc_id,
+                    "span_start": item.chunk.span_start,
+                    "span_end": item.chunk.span_end,
+                    "score": item.score,
+                }
+                for item in scored
+            ],
+            "fallback_used": False,
+            "latency_ms": {
+                "retrieval": round(retrieval_ms, 3),
+                "model": round(model_ms, 3),
+                "total": round((time.perf_counter() - started) * 1000, 3),
+            },
+        },
+    )
