@@ -1,0 +1,221 @@
+name: Track 4 real Docker validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out validation branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13 for official validators
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Prepare artifact directory
+        run: mkdir -p artifacts/docker-validation
+
+      - name: Install pinned official validation toolkit
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install jsonschema pytest \
+            "qfbench2-common @ git+https://github.com/Agenthon-2026/Agenthon2026-public.git@v2.4.4#subdirectory=common"
+
+      - name: Build real linux/amd64 Docker image
+        id: build
+        shell: bash
+        run: |
+          set -o pipefail
+          started=$(date +%s)
+          docker build --platform linux/amd64 \
+            --file baselines/strong_rag_baseline/Dockerfile \
+            --tag t4-task-agent:validation . \
+            2>&1 | tee artifacts/docker-validation/build.log
+          finished=$(date +%s)
+          duration=$((finished - started))
+          image_id=$(docker image inspect t4-task-agent:validation --format '{{.Id}}')
+          {
+            echo "build_command=docker build --platform linux/amd64 --file baselines/strong_rag_baseline/Dockerfile --tag t4-task-agent:validation ."
+            echo "build_duration_seconds=$duration"
+            echo "image_id=$image_id"
+            echo "runner_arch=$(uname -m)"
+            echo "docker_version=$(docker version --format '{{.Server.Version}}')"
+          } | tee artifacts/docker-validation/build-info.txt
+          echo "duration=$duration" >> "$GITHUB_OUTPUT"
+
+      - name: Inspect image metadata and history
+        shell: bash
+        run: |
+          docker image inspect t4-task-agent:validation \
+            > artifacts/docker-validation/docker-inspect.json
+          docker history --no-trunc t4-task-agent:validation \
+            > artifacts/docker-validation/docker-history.txt
+          docker image inspect t4-task-agent:validation \
+            --format 'Architecture={{.Architecture}}
+          Os={{.Os}}
+          Entrypoint={{json .Config.Entrypoint}}
+          Cmd={{json .Config.Cmd}}
+          Labels={{json .Config.Labels}}
+          Size={{.Size}}
+          ImageID={{.Id}}' \
+            | tee artifacts/docker-validation/image-summary.txt
+          test "$(docker image inspect t4-task-agent:validation --format '{{.Architecture}}')" = amd64
+          test "$(docker image inspect t4-task-agent:validation --format '{{.Os}}')" = linux
+          test "$(docker image inspect t4-task-agent:validation --format '{{index .Config.Labels "qfbench2.interface_version"}}')" = 2.0
+
+      - name: Check image contents for forbidden material
+        shell: bash
+        run: |
+          set -euo pipefail
+          cid=$(docker create t4-task-agent:validation)
+          trap 'docker rm -f "$cid" >/dev/null 2>&1 || true' EXIT
+          docker export "$cid" | tar -tf - > artifacts/docker-validation/image-files.txt
+          docker rm "$cid" >/dev/null
+          trap - EXIT
+          if grep -Eai '(^|/)(\.ssh(/|$)|\.env($|\.)|id_rsa($|\.)|id_ed25519($|\.)|credentials($|\.)|huggingface(/|$)|[^/]*deberta[^/]*|artifacts/docker-validation)' \
+              artifacts/docker-validation/image-files.txt \
+              > artifacts/docker-validation/forbidden-image-paths.txt; then
+            echo "Forbidden or dev-only material found in image" >&2
+            cat artifacts/docker-validation/forbidden-image-paths.txt >&2
+            exit 1
+          fi
+          echo "PASS: no forbidden credential, cache, evaluator-weight, or experiment paths found" \
+            > artifacts/docker-validation/image-content-check.txt
+
+      - name: Run three target types and official smoke checks
+        shell: bash
+        run: |
+          set -uo pipefail
+          failures=0
+
+          validate_answer() {
+            local unit="$1"
+            local output_dir="$2"
+            local validation_log="$output_dir/validation.txt"
+            : > "$validation_log"
+
+            python - "$output_dir/answer.json" <<'PY' >> "$validation_log" 2>&1
+          import importlib.resources as resources
+          import json
+          import jsonschema
+          import sys
+
+          answer_path = sys.argv[1]
+          schema_path = resources.files("qfbench2_common") / "schemas" / "analysis.schema.json"
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          with open(answer_path, encoding="utf-8") as handle:
+              answer = json.load(handle)
+          jsonschema.validate(answer, schema)
+          print("SCHEMA: PASS")
+          PY
+            local schema_exit=$?
+            PYTHONPATH="$PWD" qfbench2-smoke "units/$unit" "$output_dir" \
+              --track analysis --profile smoke >> "$validation_log" 2>&1
+            local smoke_exit=$?
+            qfbench2 manifest assert-public-safe "units/$unit" \
+              >> "$validation_log" 2>&1
+            local manifest_exit=$?
+            if (( schema_exit != 0 || smoke_exit != 0 || manifest_exit != 0 )); then
+              return 1
+            fi
+          }
+
+          run_unit() {
+            local kind="$1"
+            local unit="$2"
+            shift 2
+            local output_dir="$PWD/artifacts/docker-validation/$kind"
+            mkdir -p "$output_dir"
+            local started finished elapsed exit_code
+            started=$(date +%s)
+            docker run --rm "$@" \
+              -v "$PWD/units/$unit:/input:ro" \
+              -v "$output_dir:/output" \
+              t4-task-agent:validation \
+              analyze --task /input/task.json --corpus /input/corpus \
+              --out /output/answer.json --trace /output/trace.json \
+              > "$output_dir/logs.txt" 2>&1
+            exit_code=$?
+            finished=$(date +%s)
+            elapsed=$((finished - started))
+            {
+              echo "unit=$unit"
+              echo "exit_code=$exit_code"
+              echo "runtime_seconds=$elapsed"
+              echo "answer_exists=$([ -s "$output_dir/answer.json" ] && echo true || echo false)"
+            } > "$output_dir/run-info.txt"
+            if (( exit_code != 0 )) || [[ ! -s "$output_dir/answer.json" ]]; then
+              echo "FAIL: $kind container execution" >> artifacts/docker-validation/failures.txt
+              failures=$((failures + 1))
+              return
+            fi
+            if ! validate_answer "$unit" "$output_dir"; then
+              echo "FAIL: $kind validation" >> artifacts/docker-validation/failures.txt
+              failures=$((failures + 1))
+            fi
+          }
+
+          run_unit classification t4-credit-event-2023
+          run_unit regression t4-auction-btc-202411-us7
+          run_unit ranking t4-cotpos-202411-us10
+          run_unit ranking-network-none t4-cotpos-202411-us10 --network=none
+          run_unit endpoint-unavailable t4-credit-event-2023 \
+            --network=none \
+            -e MODEL_ENDPOINT=http://127.0.0.1:9 \
+            -e MODEL_NAME=unavailable-test \
+            -e MODEL_TOKEN=not-a-secret \
+            -e T4_MODEL_TIMEOUT_S=2 \
+            -e T4_MODEL_RETRIES=0 \
+            -e T4_UNIT_TIMEOUT_S=20
+
+          if (( failures > 0 )); then
+            cat artifacts/docker-validation/failures.txt >&2
+            exit 1
+          fi
+
+      - name: Write validation summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Executive summary (read this first)"
+            echo
+            echo "This artifact records a real Docker build and container run on GitHub's ubuntu-latest runner."
+            echo "It is validation evidence only and is not a leaderboard submission."
+            echo
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo "- Workflow status before artifact upload: ${{ job.status }}"
+            if [[ -f artifacts/docker-validation/image-summary.txt ]]; then
+              echo
+              echo '```text'
+              cat artifacts/docker-validation/image-summary.txt
+              echo '```'
+            fi
+            if [[ -f artifacts/docker-validation/failures.txt ]]; then
+              echo
+              echo "### Failures"
+              cat artifacts/docker-validation/failures.txt
+            else
+              echo
+              echo "No unit-level failures were recorded. See the workflow status for earlier-step failures."
+            fi
+          } > artifacts/docker-validation/summary.md
+          cat artifacts/docker-validation/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-validation-${{ github.run_id }}
+          path: artifacts/docker-validation/
+          if-no-files-found: error
+          retention-days: 14
