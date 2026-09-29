@@ -181,6 +181,123 @@ jobs:
             exit 1
           fi
 
+      - name: Validate platform-like non-root read-only sandbox
+        shell: bash
+        run: |
+          set -uo pipefail
+          unit=t4-cotpos-202411-us10
+          output_dir="$PWD/artifacts/docker-validation/platform-sandbox"
+          mkdir -p "$output_dir"
+          chmod 777 "$output_dir"
+
+          run_sandbox() {
+            local memory_mode="$1"
+            local -a resource_args=(--cpus 16)
+            if [[ "$memory_mode" == official ]]; then
+              resource_args+=(--memory 128g --memory-swap 128g)
+            fi
+            timeout 600s docker run --rm \
+              --read-only \
+              --user 65534:65534 \
+              --cap-drop=ALL \
+              --security-opt no-new-privileges \
+              --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
+              --pids-limit 256 \
+              --ulimit nofile=1024:1024 \
+              --ulimit nproc=256:256 \
+              "${resource_args[@]}" \
+              --network=none \
+              -e QFBENCH_SEED=0 \
+              -e QFBENCH_NETWORK=none \
+              -v "$PWD/units/$unit:/input:ro" \
+              -v "$output_dir:/output" \
+              t4-task-agent:validation \
+              analyze \
+              --task /input/task.json \
+              --corpus /input/corpus \
+              --out /output/answer.json \
+              --trace /output/trace.json
+          }
+
+          started=$(date +%s)
+          set +e
+          run_sandbox official > "$output_dir/logs.txt" 2>&1
+          exit_code=$?
+          set -e
+          resource_mode=official-16cpu-128g
+
+          if (( exit_code != 0 )) && \
+             grep -Eqi 'cannot set memory|memory limit|not enough memory|exceeds.*memory|invalid.*memory' \
+               "$output_dir/logs.txt"; then
+            resource_mode=github-runner-memory-fallback
+            rm -f "$output_dir/answer.json" "$output_dir/trace.json"
+            set +e
+            run_sandbox runner-compatible >> "$output_dir/logs.txt" 2>&1
+            exit_code=$?
+            set -e
+          fi
+
+          finished=$(date +%s)
+          elapsed=$((finished - started))
+          {
+            echo "unit=$unit"
+            echo "exit_code=$exit_code"
+            echo "runtime_seconds=$elapsed"
+            echo "resource_mode=$resource_mode"
+            echo "answer_exists=$([ -s "$output_dir/answer.json" ] && echo true || echo false)"
+            echo "trace_exists=$([ -s "$output_dir/trace.json" ] && echo true || echo false)"
+            echo "output_bytes=$(du -sb "$output_dir" | cut -f1)"
+            echo "output_permissions=$(stat -c '%a %u:%g' "$output_dir")"
+          } > "$output_dir/run-info.txt"
+
+          if (( exit_code != 0 )); then
+            echo "Platform sandbox container exited $exit_code" >&2
+            cat "$output_dir/logs.txt" >&2
+            exit 1
+          fi
+          test -s "$output_dir/answer.json"
+          test -s "$output_dir/trace.json"
+          test "$(du -sb "$output_dir" | cut -f1)" -le 67108864
+
+          python - "$PWD/units/$unit/task.json" "$output_dir/answer.json" \
+            <<'PY' > "$output_dir/validation.txt" 2>&1
+          import importlib.resources as resources
+          import json
+          import jsonschema
+          import sys
+
+          task_path, answer_path = sys.argv[1:]
+          schema_path = resources.files("qfbench2_common") / "schemas" / "analysis.schema.json"
+          schema = json.loads(schema_path.read_text(encoding="utf-8"))
+          with open(task_path, encoding="utf-8") as handle:
+              task = json.load(handle)
+          with open(answer_path, encoding="utf-8") as handle:
+              answer = json.load(handle)
+          jsonschema.validate(answer, schema)
+          expected = [entity["entity_id"] for entity in task["entities"]]
+          actual = [prediction["entity_id"] for prediction in answer["entity_predictions"]]
+          assert actual == expected, (actual, expected)
+          assert all(prediction.get("claims") for prediction in answer["entity_predictions"])
+          print("SCHEMA: PASS")
+          print("ROSTER: PASS")
+          print("CLAIMS PRESENT: PASS")
+          PY
+
+          PYTHONPATH="$PWD" qfbench2-smoke "units/$unit" "$output_dir" \
+            --track analysis --profile smoke >> "$output_dir/validation.txt" 2>&1
+          qfbench2 manifest assert-public-safe "units/$unit" \
+            >> "$output_dir/validation.txt" 2>&1
+
+          if grep -Eai \
+              'permission denied|read-only file system|(^|[^[:alpha:]])HOME([^[:alpha:]]|$)|\.cache|/tmp.*execut|cannot create|cannot write' \
+              "$output_dir/logs.txt" > "$output_dir/hidden-write-findings.txt"; then
+            echo "Hidden-write dependency detected" >&2
+            cat "$output_dir/hidden-write-findings.txt" >&2
+            exit 1
+          fi
+          echo "PASS: no hidden-write error patterns in stdout/stderr" \
+            > "$output_dir/hidden-write-check.txt"
+
       - name: Write validation summary
         if: always()
         shell: bash
