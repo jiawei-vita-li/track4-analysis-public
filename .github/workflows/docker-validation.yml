@@ -192,9 +192,11 @@ jobs:
 
           run_sandbox() {
             local memory_mode="$1"
-            local -a resource_args=(--cpus 16)
+            local -a resource_args=()
             if [[ "$memory_mode" == official ]]; then
-              resource_args+=(--memory 128g --memory-swap 128g)
+              resource_args+=(--cpus 16 --memory 128g --memory-swap 128g)
+            else
+              resource_args+=(--cpus "$(docker info --format '{{.NCPU}}')")
             fi
             timeout 600s docker run --rm \
               --read-only \
@@ -227,9 +229,9 @@ jobs:
           resource_mode=official-16cpu-128g
 
           if (( exit_code != 0 )) && \
-             grep -Eqi 'cannot set memory|memory limit|not enough memory|exceeds.*memory|invalid.*memory' \
+             grep -Eqi 'range of CPUs|CPUs available|cannot set memory|memory limit|not enough memory|exceeds.*memory|invalid.*memory' \
                "$output_dir/logs.txt"; then
-            resource_mode=github-runner-memory-fallback
+            resource_mode=github-runner-resource-fallback
             rm -f "$output_dir/answer.json" "$output_dir/trace.json"
             set +e
             run_sandbox runner-compatible >> "$output_dir/logs.txt" 2>&1
@@ -244,6 +246,8 @@ jobs:
             echo "exit_code=$exit_code"
             echo "runtime_seconds=$elapsed"
             echo "resource_mode=$resource_mode"
+            echo "runner_cpus=$(docker info --format '{{.NCPU}}')"
+            echo "runner_memory_bytes=$(docker info --format '{{.MemTotal}}')"
             echo "answer_exists=$([ -s "$output_dir/answer.json" ] && echo true || echo false)"
             echo "trace_exists=$([ -s "$output_dir/trace.json" ] && echo true || echo false)"
             echo "output_bytes=$(du -sb "$output_dir" | cut -f1)"
