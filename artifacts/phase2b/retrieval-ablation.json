@@ -1,0 +1,229 @@
+{
+  "task_id": "t4-EXAMPLE-eps-beat",
+  "target_type": "classification",
+  "top_k": 4,
+  "entities": [
+    {
+      "entity_id": "AAPL",
+      "variants": {
+        "official_strong": {
+          "retrieved": [
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 0,
+              "span_end": 442,
+              "score": 4.429334246900371,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "CUPERTINO, California — February 1, 2024 — Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6 billion, up 2 percent year over year, and quarterly earnings per diluted share of $2.18. \"We are happy to report that we had a record quarter, and that our installed base of active devices has now surpassed 2.2 billion,\" said Tim Cook, Apple's CEO."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 0,
+              "span_end": 433,
+              "score": 2.3008587404426195,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Apple Inc. reports net sales of $119.6 billion for the three months ended December 30, 2023, compared to $117.2 billion for the three months ended December 31, 2022, an increase of approximately 2%. Diluted earnings per share were $2.18, compared to $1.88 in the same quarter of the prior year. Services net sales were $23.1 billion for the three months ended December 30, 2023, an increase of $2.3 billion, or 11.3%, year over year."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 443,
+              "span_end": 975,
+              "score": 2.2587968769364792,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "\"We have a very strong product lineup going into the March quarter, and our Services business continues to grow rapidly, contributing meaningfully to our profitability.\" Luca Maestri, Apple's CFO, provided the following guidance for the second fiscal quarter of 2024: total revenue is expected to grow low- to mid-single digits year over year; Services revenue is expected to grow double digits year over year; gross margin is expected to be between 46.0 and 47.0 percent; operating expenses between $14.3 billion and $14.5 billion."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 991,
+              "span_end": 1246,
+              "score": 1.9365746543004647,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Looking forward to the March quarter, the Company expects revenue to be similar to the December quarter on a year-over-year basis. Foreign exchange headwinds are expected to be approximately negative 2.5 percentage points to year-over-year revenue growth."
+            }
+          ],
+          "document_diversity": 2,
+          "span_diversity": 4,
+          "cutoff_violations": 0,
+          "invalid_spans": 0,
+          "queries": [
+            "Apple Inc. AAPL Information Technology results revenue earnings guidance outlook growth"
+          ],
+          "latency_ms": 0.116
+        },
+        "task_single": {
+          "retrieved": [
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 0,
+              "span_end": 442,
+              "score": 1.580348644163346,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "CUPERTINO, California — February 1, 2024 — Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6 billion, up 2 percent year over year, and quarterly earnings per diluted share of $2.18. \"We are happy to report that we had a record quarter, and that our installed base of active devices has now surpassed 2.2 billion,\" said Tim Cook, Apple's CEO."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 0,
+              "span_end": 433,
+              "score": 1.353661207991338,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Apple Inc. reports net sales of $119.6 billion for the three months ended December 30, 2023, compared to $117.2 billion for the three months ended December 31, 2022, an increase of approximately 2%. Diluted earnings per share were $2.18, compared to $1.88 in the same quarter of the prior year. Services net sales were $23.1 billion for the three months ended December 30, 2023, an increase of $2.3 billion, or 11.3%, year over year."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 434,
+              "span_end": 990,
+              "score": 0.5658710643021836,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Services gross margin percentage was 72.8%, reflecting continued operational leverage as subscription revenue scale increases across the App Store, Apple Music, iCloud, and Apple TV+ offerings. iPhone net sales were $69.7 billion for the three months ended December 30, 2023, compared to $65.8 billion in the prior year period. Management noted resilient demand in emerging markets, particularly India and Southeast Asia, which offset moderation in China. The iPhone 15 Pro and Pro Max models achieved higher average selling prices than their predecessors."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 443,
+              "span_end": 975,
+              "score": 0.37793822383036907,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "\"We have a very strong product lineup going into the March quarter, and our Services business continues to grow rapidly, contributing meaningfully to our profitability.\" Luca Maestri, Apple's CFO, provided the following guidance for the second fiscal quarter of 2024: total revenue is expected to grow low- to mid-single digits year over year; Services revenue is expected to grow double digits year over year; gross margin is expected to be between 46.0 and 47.0 percent; operating expenses between $14.3 billion and $14.5 billion."
+            }
+          ],
+          "document_diversity": 2,
+          "span_diversity": 4,
+          "cutoff_violations": 0,
+          "invalid_spans": 0,
+          "queries": [
+            "apple inc. aapl information technology eps_outcome classification"
+          ],
+          "latency_ms": 0.077
+        },
+        "task_multi_rrf": {
+          "retrieved": [
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 0,
+              "span_end": 442,
+              "score": 0.0819672131147541,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "CUPERTINO, California — February 1, 2024 — Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6 billion, up 2 percent year over year, and quarterly earnings per diluted share of $2.18. \"We are happy to report that we had a record quarter, and that our installed base of active devices has now surpassed 2.2 billion,\" said Tim Cook, Apple's CEO."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 0,
+              "span_end": 433,
+              "score": 0.08064516129032258,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Apple Inc. reports net sales of $119.6 billion for the three months ended December 30, 2023, compared to $117.2 billion for the three months ended December 31, 2022, an increase of approximately 2%. Diluted earnings per share were $2.18, compared to $1.88 in the same quarter of the prior year. Services net sales were $23.1 billion for the three months ended December 30, 2023, an increase of $2.3 billion, or 11.3%, year over year."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 434,
+              "span_end": 990,
+              "score": 0.07936507936507936,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Services gross margin percentage was 72.8%, reflecting continued operational leverage as subscription revenue scale increases across the App Store, Apple Music, iCloud, and Apple TV+ offerings. iPhone net sales were $69.7 billion for the three months ended December 30, 2023, compared to $65.8 billion in the prior year period. Management noted resilient demand in emerging markets, particularly India and Southeast Asia, which offset moderation in China. The iPhone 15 Pro and Pro Max models achieved higher average selling prices than their predecessors."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 443,
+              "span_end": 975,
+              "score": 0.07788461538461539,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "\"We have a very strong product lineup going into the March quarter, and our Services business continues to grow rapidly, contributing meaningfully to our profitability.\" Luca Maestri, Apple's CFO, provided the following guidance for the second fiscal quarter of 2024: total revenue is expected to grow low- to mid-single digits year over year; Services revenue is expected to grow double digits year over year; gross margin is expected to be between 46.0 and 47.0 percent; operating expenses between $14.3 billion and $14.5 billion."
+            }
+          ],
+          "document_diversity": 2,
+          "span_diversity": 4,
+          "cutoff_violations": 0,
+          "invalid_spans": 0,
+          "queries": [
+            "apple inc. aapl information technology eps_outcome classification",
+            "apple inc. aapl frozen evidence corpus assembled 2024-03-15 each company table below whether its q2 fy2024 diluted eps beat miss land inline analyst consensus estimate threshold 5% support prediction citations corpus.",
+            "apple inc. aapl eps_outcome classification sector mktcap bn consensus eps threshold pct beat condition miss inline",
+            "apple inc. aapl information technology reported_eps consensus_eps threshold_pct abs",
+            "apple inc. aapl eps_outcome classification mktcap bn 2650 consensus eps 1.5 threshold pct 0.05"
+          ],
+          "latency_ms": 0.4
+        },
+        "task_multi_max_normalized": {
+          "retrieved": [
+            {
+              "doc_id": "EDGAR_0000320193_8K_20240201",
+              "doc_date": "2024-02-01",
+              "span_start": 0,
+              "span_end": 442,
+              "score": 1.0,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "CUPERTINO, California — February 1, 2024 — Apple Inc. today announced financial results for its fiscal 2024 first quarter ended December 30, 2023. The Company posted quarterly revenue of $119.6 billion, up 2 percent year over year, and quarterly earnings per diluted share of $2.18. \"We are happy to report that we had a record quarter, and that our installed base of active devices has now surpassed 2.2 billion,\" said Tim Cook, Apple's CEO."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 0,
+              "span_end": 433,
+              "score": 0.8565585910367146,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Apple Inc. reports net sales of $119.6 billion for the three months ended December 30, 2023, compared to $117.2 billion for the three months ended December 31, 2022, an increase of approximately 2%. Diluted earnings per share were $2.18, compared to $1.88 in the same quarter of the prior year. Services net sales were $23.1 billion for the three months ended December 30, 2023, an increase of $2.3 billion, or 11.3%, year over year."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 434,
+              "span_end": 990,
+              "score": 0.35806723180489197,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Services gross margin percentage was 72.8%, reflecting continued operational leverage as subscription revenue scale increases across the App Store, Apple Music, iCloud, and Apple TV+ offerings. iPhone net sales were $69.7 billion for the three months ended December 30, 2023, compared to $65.8 billion in the prior year period. Management noted resilient demand in emerging markets, particularly India and Southeast Asia, which offset moderation in China. The iPhone 15 Pro and Pro Max models achieved higher average selling prices than their predecessors."
+            },
+            {
+              "doc_id": "EDGAR_0000320193_10Q_20240202",
+              "doc_date": "2024-02-02",
+              "span_start": 1247,
+              "span_end": 1365,
+              "score": 0.2543798497659315,
+              "citation_resolves": true,
+              "cutoff_eligible": true,
+              "text": "Services is expected to continue its growth trajectory, with management guiding to double-digit year-over-year growth."
+            }
+          ],
+          "document_diversity": 2,
+          "span_diversity": 4,
+          "cutoff_violations": 0,
+          "invalid_spans": 0,
+          "queries": [
+            "apple inc. aapl information technology eps_outcome classification",
+            "apple inc. aapl frozen evidence corpus assembled 2024-03-15 each company table below whether its q2 fy2024 diluted eps beat miss land inline analyst consensus estimate threshold 5% support prediction citations corpus.",
+            "apple inc. aapl eps_outcome classification sector mktcap bn consensus eps threshold pct beat condition miss inline",
+            "apple inc. aapl information technology reported_eps consensus_eps threshold_pct abs",
+            "apple inc. aapl eps_outcome classification mktcap bn 2650 consensus eps 1.5 threshold pct 0.05"
+          ],
+          "latency_ms": 0.377
+        }
+      }
+    }
+  ],
+  "prediction_accuracy_measured": false
+}

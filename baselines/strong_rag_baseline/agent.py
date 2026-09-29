@@ -15,15 +15,11 @@ from dataclasses import dataclass
 from .client import ModelClient
 from .indexer import Chunk, IndexedCorpus
 from .prompts import SYSTEM_PROMPT, build_user_prompt
+from .queries import build_queries
 from .retriever import BM25Index
 from .span_finder import find_span
 
 _JSON_BLOCK = re.compile(r"\{.*\}", re.DOTALL)
-
-#: Query terms appended to every entity query — steer retrieval toward result
-#: and outlook language regardless of family.
-_QUERY_SUFFIX = "results revenue earnings guidance outlook growth"
-
 
 @dataclass
 class EntityResult:
@@ -38,14 +34,6 @@ def _parse_model_json(raw: str) -> dict:
     if match is None:
         raise ValueError("model reply contains no JSON object")
     return json.loads(match.group(0))
-
-
-def _entity_query(entity: dict) -> str:
-    parts = [
-        str(entity.get(key, ""))
-        for key in ("name", "entity_id", "sector", "series_id", "description")
-    ]
-    return " ".join(p for p in parts if p) + " " + _QUERY_SUFFIX
 
 
 def _ground_claims(
@@ -126,7 +114,8 @@ def run_entity(
     client: ModelClient,
     top_k: int,
 ) -> EntityResult:
-    retrieved = [s.chunk for s in index.search(_entity_query(entity), top_k)]
+    queries = build_queries(task, entity)
+    retrieved = [s.chunk for s in index.search_multi(queries, top_k, fusion="rrf")]
     raw = client.complete(SYSTEM_PROMPT, build_user_prompt(task, entity, retrieved))
     parsed = _parse_model_json(raw)
 

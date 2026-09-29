@@ -40,9 +40,11 @@ def test_index_rejects_manifest_digest_mismatch(tmp_path: Path) -> None:
 def test_chunk_offsets_resolve_in_joined_text():
     corpus = build_index(EXAMPLE_UNIT / "corpus")
     assert corpus.chunks, "example corpus produced no chunks"
+    assert len(corpus.chunks) > len(corpus.doc_texts), "flat documents should be split"
     for chunk in corpus.chunks:
         doc_text = corpus.doc_texts[chunk.doc_id]
         assert doc_text[chunk.span_start : chunk.span_end] == chunk.text
+        assert len(chunk.text) <= 600
 
 
 def make_chunk(doc_id: str, text: str, date: str | None = "2024-01-01") -> Chunk:

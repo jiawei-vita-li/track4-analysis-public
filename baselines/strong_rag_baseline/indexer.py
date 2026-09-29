@@ -11,10 +11,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 _MANIFEST_NAME = "manifest.json"
+_MAX_CHUNK_CHARS = 600
+_SENTENCE_BREAK = re.compile(r"(?<=[.!?])\s+")
 
 
 @dataclass(frozen=True)
@@ -40,6 +43,35 @@ def _iter_span_texts(doc: dict) -> list[str]:
     if isinstance(spans, list):
         return [sp.get("text", "") for sp in spans if isinstance(sp, dict)]
     return []
+
+
+def _split_text(text: str, base_offset: int) -> list[tuple[int, int, str]]:
+    """Split long text at sentence/word boundaries without changing any byte offsets."""
+    if len(text) <= _MAX_CHUNK_CHARS:
+        return [(base_offset, base_offset + len(text), text)] if text else []
+    boundaries = [match.start() for match in _SENTENCE_BREAK.finditer(text)]
+    chunks: list[tuple[int, int, str]] = []
+    start = 0
+    while start < len(text):
+        limit = min(start + _MAX_CHUNK_CHARS, len(text))
+        choices = [boundary for boundary in boundaries if start < boundary <= limit]
+        if choices:
+            end = choices[-1]
+        elif limit < len(text):
+            word_break = text.rfind(" ", start + 1, limit + 1)
+            end = word_break if word_break > start else limit
+        else:
+            end = len(text)
+        while start < end and text[start].isspace():
+            start += 1
+        while end > start and text[end - 1].isspace():
+            end -= 1
+        if end > start:
+            chunks.append((base_offset + start, base_offset + end, text[start:end]))
+        start = end
+        while start < len(text) and text[start].isspace():
+            start += 1
+    return chunks
 
 
 def _declared_paths(corpus_dir: Path) -> list[tuple[Path, str]]:
@@ -93,14 +125,14 @@ def build_index(corpus_dir: str | Path) -> IndexedCorpus:
         offset = 0
         parts: list[str] = []
         for text in _iter_span_texts(doc):
-            if text:
+            for span_start, span_end, chunk_text in _split_text(text, offset):
                 chunks.append(
                     Chunk(
                         doc_id=doc_id,
                         doc_date=doc_date,
-                        span_start=offset,
-                        span_end=offset + len(text),
-                        text=text,
+                        span_start=span_start,
+                        span_end=span_end,
+                        text=chunk_text,
                     )
                 )
             parts.append(text)

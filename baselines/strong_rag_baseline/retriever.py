@@ -81,3 +81,37 @@ class BM25Index:
             key=lambda s: (-s.score, s.chunk.doc_id, s.chunk.span_start)
         )
         return scored[:top_k]
+
+    def search_multi(
+        self,
+        queries: list[str],
+        top_k: int,
+        *,
+        per_query_k: int | None = None,
+        fusion: str = "rrf",
+    ) -> list[ScoredChunk]:
+        """Fuse deterministic per-query rankings and deduplicate exact spans."""
+        if fusion not in {"rrf", "max_normalized"}:
+            raise ValueError(f"unknown score fusion: {fusion}")
+        depth = per_query_k or max(top_k, 10)
+        fused: dict[tuple[str, int, int], tuple[Chunk, float]] = {}
+        for query in queries:
+            hits = self.search(query, depth)
+            maximum = hits[0].score if hits else 0.0
+            for rank, hit in enumerate(hits, start=1):
+                key = (hit.chunk.doc_id, hit.chunk.span_start, hit.chunk.span_end)
+                contribution = (
+                    1.0 / (60.0 + rank)
+                    if fusion == "rrf"
+                    else (hit.score / maximum if maximum > 0 else 0.0)
+                )
+                previous = fused.get(key)
+                if previous is None:
+                    fused[key] = (hit.chunk, contribution)
+                elif fusion == "rrf":
+                    fused[key] = (hit.chunk, previous[1] + contribution)
+                else:
+                    fused[key] = (hit.chunk, max(previous[1], contribution))
+        ranked = [ScoredChunk(chunk=chunk, score=score) for chunk, score in fused.values()]
+        ranked.sort(key=lambda item: (-item.score, item.chunk.doc_id, item.chunk.span_start))
+        return ranked[:top_k]
