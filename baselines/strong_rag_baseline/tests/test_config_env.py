@@ -18,7 +18,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from strong_rag_baseline.config import Config  # noqa: E402
 
-_ENV_VARS = ("MODEL_NAME", "MODEL_ID", "MODEL_ENDPOINT", "MODEL_TOKEN")
+_ENV_VARS = (
+    "MODEL_NAME", "MODEL_ID", "MODEL_ENDPOINT", "MODEL_TOKEN",
+    "T4_MAX_REQUESTS", "T4_MAX_OUTPUT_TOKENS", "T4_UNIT_TIMEOUT_S",
+)
 
 
 @pytest.fixture(autouse=True)
@@ -43,6 +46,17 @@ def test_model_id_survives_as_local_dev_fallback(
 ) -> None:
     monkeypatch.setenv("MODEL_ID", "qwen2.5:7b")
     assert Config.from_env().model_id == "qwen2.5:7b"
+
+
+def test_official_budget_limits_cannot_be_raised_by_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("T4_MAX_REQUESTS", "999")
+    monkeypatch.setenv("T4_MAX_OUTPUT_TOKENS", "999999")
+    monkeypatch.setenv("T4_UNIT_TIMEOUT_S", "9999")
+    config = Config.from_env()
+
+    assert config.max_requests == 25
+    assert config.max_output_tokens == 4000
+    assert config.unit_timeout_s == 540.0
 
 
 def test_chat_completions_url_adds_v1_for_the_injected_origin() -> None:

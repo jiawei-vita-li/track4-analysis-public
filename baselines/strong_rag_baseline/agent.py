@@ -9,7 +9,6 @@ faithfulness gate, while a dropped one merely loses a little coverage.
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass
 
 from .client import ModelClient
@@ -18,8 +17,6 @@ from .prompts import SYSTEM_PROMPT, build_user_prompt
 from .queries import build_queries
 from .retriever import BM25Index
 from .span_finder import find_span
-
-_JSON_BLOCK = re.compile(r"\{.*\}", re.DOTALL)
 
 @dataclass
 class EntityResult:
@@ -30,10 +27,17 @@ class EntityResult:
 
 def _parse_model_json(raw: str) -> dict:
     """Extract the first JSON object from the model reply (tolerates fences)."""
-    match = _JSON_BLOCK.search(raw)
-    if match is None:
-        raise ValueError("model reply contains no JSON object")
-    return json.loads(match.group(0))
+    decoder = json.JSONDecoder()
+    for start, character in enumerate(raw):
+        if character != "{":
+            continue
+        try:
+            parsed, _ = decoder.raw_decode(raw[start:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    raise ValueError("model reply contains no valid JSON object")
 
 
 def _ground_claims(

@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from baselines.strong_rag_baseline.indexer import Chunk, build_index
+from baselines.strong_rag_baseline.agent import _parse_model_json
 from baselines.strong_rag_baseline.retriever import BM25Index
 from baselines.strong_rag_baseline.span_finder import find_span
 
@@ -89,3 +90,9 @@ def test_find_span_exact_and_normalized():
 def test_find_span_missing_returns_none():
     assert find_span("short text", "not present anywhere") is None
     assert find_span("short text", "   ") is None
+
+
+def test_model_json_parser_ignores_prose_braces_and_trailing_objects():
+    raw = 'analysis {not json}\n```json\n{"label":"yes","point_forecast":1}\n```\n{"extra":2}'
+
+    assert _parse_model_json(raw) == {"label": "yes", "point_forecast": 1}

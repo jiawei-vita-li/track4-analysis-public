@@ -156,9 +156,11 @@ def run(
             )
     answer = build_answer(task, results, corpus)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(
+    temporary = out_path.with_name(out_path.name + ".tmp")
+    temporary.write_text(
         json.dumps(answer, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
+    temporary.replace(out_path)
     return answer
 
 
@@ -187,6 +189,8 @@ def main(argv: list[str] | None = None) -> int:
         f"wrote {args.out} — {len(answer['entity_predictions'])} entities, "
         f"{n_claims} grounded claims"
     )
+    if isinstance(client, HTTPModelClient):
+        print(f"House requests admitted: {client.request_count}/{config.max_requests}")
     return 0
 
 

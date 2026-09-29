@@ -17,7 +17,7 @@ import json
 import time
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Callable, Protocol
 
 from .config import Config
@@ -41,9 +41,25 @@ class ModelClient(Protocol):
         ...
 
 
+class RequestBudgetExceeded(RuntimeError):
+    pass
+
+
+class UnitDeadlineExceeded(RuntimeError):
+    pass
+
+
 @dataclass
 class HTTPModelClient:
     config: Config
+    request_count: int = field(init=False, default=0)
+    _deadline: float = field(init=False)
+
+    def __post_init__(self) -> None:
+        self._deadline = time.monotonic() + self.config.unit_timeout_s
+
+    def _remaining(self) -> float:
+        return self._deadline - time.monotonic()
 
     def complete(self, system: str, user: str) -> str:
         if not self.config.model_endpoint:
@@ -60,6 +76,7 @@ class HTTPModelClient:
             ],
             "temperature": self.config.temperature,
             "seed": self.config.seed,
+            "max_tokens": self.config.max_output_tokens,
         }
         headers = {"Content-Type": "application/json"}
         if self.config.model_token:
@@ -72,15 +89,25 @@ class HTTPModelClient:
         )
         last_error: Exception | None = None
         for attempt in range(self.config.max_retries):
+            remaining = self._remaining()
+            if remaining <= 0:
+                raise UnitDeadlineExceeded("unit model-call deadline exhausted")
+            if self.request_count >= self.config.max_requests:
+                raise RequestBudgetExceeded(
+                    f"official request budget exhausted ({self.config.max_requests})"
+                )
+            self.request_count += 1
             try:
                 with urllib.request.urlopen(
-                    request, timeout=self.config.timeout_s
+                    request, timeout=min(self.config.timeout_s, max(0.1, remaining))
                 ) as response:
                     body = json.loads(response.read().decode("utf-8"))
                 return body["choices"][0]["message"]["content"]
-            except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
+            except (urllib.error.URLError, TimeoutError, KeyError, json.JSONDecodeError) as exc:
                 last_error = exc
-                time.sleep(min(2**attempt, 8))
+                sleep_for = min(2**attempt, 8, max(0.0, self._remaining()))
+                if sleep_for:
+                    time.sleep(sleep_for)
         raise RuntimeError(
             f"model call failed after {self.config.max_retries} attempts"
         ) from last_error
