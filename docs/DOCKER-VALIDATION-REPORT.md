@@ -2,17 +2,20 @@
 
 The competition candidate was built and exercised with the real Docker daemon on a GitHub-hosted
 Linux runner. The final workflow run passed image inspection, content checks, all three public
-target shapes, an offline run, an unreachable-model fallback, schema validation, and the official
-non-rankable smoke verifier. No runtime or Dockerfile defect was found, so this validation branch
-changes only the workflow and this report. The candidate is ready for a Development submission;
-this result does not claim predictive quality or replace the production faithfulness judge.
+target shapes, an offline run, an unreachable-model fallback, and a platform-like non-root,
+read-only sandbox run. Schema validation and the official non-rankable smoke verifier passed for
+every tested output. No runtime or Dockerfile defect was found, so this validation branch changes
+only the workflow and this report. The candidate is ready for a Development submission; this
+result does not claim predictive quality or replace the production faithfulness judge.
 
 ## A. Source of truth
 
 The validation used the submission contract in `README.md` and `SUBMISSION_CLI.md`, the candidate
 at `baselines/strong_rag_baseline/Dockerfile`, and the executable validators installed from the
-shared toolkit version pinned by the repository documentation. The run checked commit
-`183a1442c5a50a5116c492534a3853d2dd00be53` on the personal-fork branch
+shared toolkit version pinned by the repository documentation. Platform settings were read from
+the current official `Agenthon2026-public/docs/DEVELOPMENT-RUNTIME.md` at blob
+`5b4ea75231b72a9540c79fad0cf92fc55f930889`. The final run checked commit
+`19018c0d7a5892b5af97608b650c9cb0781322ca` on the personal-fork branch
 `ci/docker-validation`; the competition-agent checkpoint remains `0c288e4` on
 `nightly/t4-agent`.
 
@@ -23,9 +26,9 @@ traces, and validator output. No resolved outcomes were used or produced.
 ## B. GitHub Actions run
 
 The final `workflow_dispatch` run is
-[36557482355](https://github.com/jiawei-vita-li/track4-analysis-public/actions/runs/36557482355).
-It completed successfully in 49 seconds on `ubuntu-latest`. Artifact
-`docker-validation-36557482355` has artifact ID `11028229605` and contains the files described by
+[36560450052](https://github.com/jiawei-vita-li/track4-analysis-public/actions/runs/36560450052).
+It completed successfully in 52 seconds on `ubuntu-latest`. Artifact
+`docker-validation-36560450052` has artifact ID `11029815032` and contains the files described by
 the workflow's upload step. An earlier successful run, `36557181118`, exposed a weakness in the
 test setup rather than the image: a zero-retry setting made no connection attempt. The final run
 uses one bounded attempt for both the primary call and the single repair.
@@ -40,8 +43,8 @@ docker build --platform linux/amd64 \
   --tag t4-task-agent:validation .
 ```
 
-The final build took 5 seconds with Docker Server 28.0.4. It produced local image ID
-`sha256:6d089681b13a0c200ece17a0a43c555445a071ef43208f2a40179d7d53dcf656`.
+The final build took 6 seconds with Docker Server 28.0.4. It produced local image ID
+`sha256:5e6f9f0e14754ddf520464fb009ed9c37a76ca6fd8202c49ce45e62ccc405c43`.
 This is a local image ID, not a registry digest and not a submitted image reference.
 
 ## D. Image inspection and content
@@ -85,6 +88,22 @@ an answer byte-for-byte identical to the ordinary no-model-endpoint ranking run.
 official smoke checks passed. This proves that the submission image has no hidden public-network
 or download dependency; it is not a test of the organiser-injected House route.
 
+### Platform-like sandbox parity
+
+The same ten-entity ranking unit also ran as uid/gid 65534 with a read-only root filesystem, all
+capabilities dropped, no-new-privileges, the official 64 MiB `noexec,nosuid,nodev` temporary
+filesystem, the official PID and file/process limits, a read-only input mount, a writable output
+mount, and no network. It exited 0 in 1 second and wrote both required validation artifacts. The
+output tree was 16,201 bytes, all ten roster entities and ten grounded claims were present, and
+schema, roster, manifest, cutoff/citation admissibility, and official smoke checks passed. A scan
+of stdout/stderr found no permission, read-only-filesystem, home/cache, temporary-executable, or
+write-creation errors.
+
+The hosted runner exposes four CPUs and 16,766,414,848 bytes of memory. Docker therefore rejected
+the initial official 16-CPU/128-GiB request before creating a container. The workflow recorded that
+daemon error and repeated the run with the runner's four-CPU ceiling; it did not relax any other
+sandbox condition. This is a GitHub runner limitation, not a submission-container failure.
+
 ## I. Official validator results
 
 Each Docker-produced answer was validated against the shared package's
@@ -123,15 +142,21 @@ One validation-only correction was made after the first successful run: the unre
 test now permits one attempt instead of zero. This changes only the workflow and makes the failure
 simulation exercise a real refused connection.
 
+The first platform-parity run also revealed that GitHub's runner exposes only four CPUs. The
+workflow now records an official-limit attempt and permits a resource-only fallback when Docker's
+daemon explicitly rejects an unavailable CPU or memory quota. This is CI orchestration only; it
+does not change the image or algorithm.
+
 ## L. Remaining risks
 
 The GitHub runner does not reproduce the organiser's audited restricted network, House endpoint,
-GPU allocation, or full per-unit resource envelope. The run intentionally used the non-rankable
-smoke verifier; it did not package the development-only NLI models and did not execute the
-production judge inside the submission image. A future runner-image migration is already announced
-by GitHub, although the Docker contract is insulated by the pinned Linux/amd64 base digest. The
-image has not yet been pushed to an anonymous registry or packaged into a Development upload, and
-this workflow did not perform either action.
+GPU allocation, or the full 16-CPU/128-GiB resource quota. It does reproduce the security and
+filesystem sandbox, subject only to the documented resource fallback above. The run intentionally
+used the non-rankable smoke verifier; it did not package the development-only NLI models and did
+not execute the production judge inside the submission image. A future runner-image migration is
+already announced by GitHub, although the Docker contract is insulated by the pinned Linux/amd64
+base digest. The image has not yet been pushed to an anonymous registry or packaged into a
+Development upload, and this workflow did not perform either action.
 
 ## M. Exact reproduction commands
 
@@ -166,5 +191,9 @@ classification, regression, ranking, offline, endpoint-failure, schema, manifest
 commands used for the final run.
 
 ## Readiness
+
+Real linux/amd64 build/run: **PASS**
+
+Platform-like non-root/read-only sandbox: **PASS**
 
 **READY FOR DEVELOPMENT SUBMISSION**
