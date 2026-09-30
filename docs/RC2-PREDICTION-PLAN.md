@@ -4,7 +4,7 @@ RC2 targets prediction quality while preserving RC1 as an immutable fallback. Th
 has a sound submission envelope, but its predictive layer is essentially one generic House prompt
 plus unsafe per-row fallbacks; there is no outcome-based evidence that it improves accuracy,
 regression error, ranking correlation, or interval score. Current official scoring is scorer
-5.2.1: prediction and raw interval quality are measured relative to the unit's declared naive
+5.2.2: prediction and raw interval quality are measured relative to the unit's declared naive
 rule, and interval quality above 0.5 is capped by predictive quality. RC2 will begin with a
 target-semantics and comparative-reasoning improvement that needs no external training data.
 Until a cutoff-compatible labelled evaluation set exists, every result in this plan carries the
@@ -18,10 +18,11 @@ defined by `baselines/strong_rag_baseline/`, especially `task_context.py`, `task
 `units/` contain no outcomes and are used only for inference-only behavioral checks.
 
 Rules were rechecked against current upstream `origin/main` at commit
-`fe313cee2865fbfbe47b65a8fcf7b830a40ea141` on 2026-09-30, plus toolkit
+`ede7381d8c1ba9d8c84068f9d142f5e093a33892` on 2026-10-01, plus toolkit
 `qfbench2-common 2.5.1` and the current Hub documents `docs/DEVELOPMENT-RUNTIME.md` and
-`docs/HOUSE-MODEL.md`. The current scorer identifies itself as 5.2.1; the immutable details and
-the 5.2.0 to 5.2.1 diff are pinned in `docs/RULES-SNAPSHOT-2026-09-30-v521.md`. Relative to RC1,
+`docs/HOUSE-MODEL.md`. The current scorer identifies itself as 5.2.2; the immutable details and
+the focused 5.2.1 to 5.2.2 claim diff are pinned in
+`docs/RULES-SNAPSHOT-2026-10-01-v522.md`. Relative to RC1,
 current public classification tasks add trusted `target.label_assertions`; the generic RC1 prompt
 already passes the complete target object through, but it does not turn those assertions into an
 explicit decision procedure.
@@ -38,9 +39,10 @@ The current scorer implications are:
   `raw_iq = naive_IS / (naive_IS + submission_IS)`, then scores
   `iq = min(raw_iq, max(0.5, predictive_quality))`; coverage is diagnostic rather than the scored
   term, and interval tricks cannot substitute for weak point predictions;
-- scorer 5.2.1 retains the per-claim false-claim penalty introduced in 5.2.0 instead of the
-  retired 80% faithfulness admission threshold. Structural schema, roster, citation-resolution,
-  and cutoff failures remain fatal.
+- scorer 5.2.2 retains the per-claim false-claim penalty introduced in 5.2.0 instead of the
+  retired 80% faithfulness admission threshold. It additionally makes content-free claims and
+  citation spans over 8,000 characters deterministically false. Structural schema, roster,
+  citation-resolution, and cutoff failures remain fatal.
 
 # Current prediction pipeline
 
@@ -99,9 +101,11 @@ statistics. This preserves information but delegates all schema interpretation t
 and type, feature names, short text values, and up to six numeric features. Span-level BM25 results
 are fused by reciprocal rank and the top four chunks per entity become evidence cards containing
 an ID, document ID, date, and exact text. The model selects one or two IDs and verbatim quotes;
-offsets stay in trusted metadata. If it selects nothing, `_claim_from_card` silently chooses the
-first card, and if its quote is absent or invalid the whole known-good chunk is cited. Those paths
-preserve citation validity but do not establish that the model used or was supported by the text.
+offsets stay in trusted metadata. R2.5 makes the exact model quote the claim; if it selects
+nothing or its quote is absent/invalid, `_claim_from_card` chooses the first card and quotes at
+most 200 characters of that same known-good chunk. Those paths preserve citation validity and
+avoid scorer-5.2.2 content-free filler, but they do not establish that the model used the text or
+that the document is bound to the row's entity.
 
 ## 6. Which public units clearly depend on fallback
 
@@ -136,7 +140,7 @@ the level with the trusted task level. Missing or invalid bounds become a symmet
 the point with half-width `max(abs(point) * 0.5, 1.0)`. There is no target-scale model,
 heteroskedasticity estimate, empirical residual distribution, or legal calibration dataset. The
 fallback was designed to avoid schema failure, not to beat the current official naive interval on
-mean interval score. Under scorer 5.2.1, even a raw interval improvement is capped at
+mean interval score. Under scorer 5.2.2, even a raw interval improvement is capped at
 `max(0.5, predictive_quality)`, so interval optimization is downstream of point-prediction quality.
 
 ## 10. Modules with no predictive-quality evidence
@@ -147,11 +151,13 @@ classification label selection, regression values, ranking scores, interval widt
 or deterministic fallback. Existing tests and ablations establish contract behavior only. The
 worked exemplar's earlier NLI result was evidence about citation plumbing, not prediction quality.
 
-For claim text, scorer 5.2.1 treats equivalent fractions, spelled-out amounts, and glued unit
-forms as the same number; excludes additional date/index/rule shapes; applies exact scale-aware
-and direction-aware own-value exemptions; and recognizes a scored interval's `±` half-width and
-its level beside interval wording. Claim generation must either quote the cited span verbatim or
-check every written number under these current rules. Styling a claim does not improve support.
+For claim text, scorer 5.2.2 retains 5.2.1's handling of equivalent fractions, spelled-out
+amounts, and glued unit forms as the same number; excludes additional date/index/rule shapes;
+applies exact scale-aware and direction-aware own-value exemptions; and recognizes a scored
+interval's `±` half-width and its level beside interval wording. It also ignores numbers inside
+ordinary or disguised URLs, makes evidence/meta-only filler false, makes spans over 8,000
+characters false, and rejects the removed nested claim-level `citations` shape. Claim generation
+now quotes the cited span verbatim; styling a claim does not improve support.
 
 # Classification, regression, and ranking failure audit
 
@@ -272,7 +278,7 @@ research candidate, not as a more accurate model.
    the entity and target yet provide no forward-looking signal; silent first-card citation hides
    this distinction.
 5. **Intervals have no scale or calibration model.** Generic symmetric fallback widths were built
-   for schema survival and are not optimized against scorer 5.2.1's capped interval-score ratio;
+   for schema survival and are not optimized against scorer 5.2.2's capped interval-score ratio;
    interval work cannot compensate for a predictive leg at or below naive parity.
 
 # First recommended algorithm improvement

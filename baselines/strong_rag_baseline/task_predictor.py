@@ -22,6 +22,8 @@ target's own units, and do not copy an unrelated numeric feature merely because 
 A related passage is not necessarily support: prefer explicit measurements, guidance, trends,
 and comparisons that bear on the prediction."""
 
+_FALLBACK_CLAIM_CHARS = 200
+
 
 @dataclass(frozen=True)
 class TaskPredictionRun:
@@ -155,14 +157,23 @@ def _claim_from_card(card: EntityCard, row: dict[str, Any]) -> tuple[list[dict],
         if relative >= 0 and quote.strip():
             start = chunk.span_start + relative
             end = start + len(quote)
+            claim_text = quote
         else:
-            start, end = chunk.span_start, chunk.span_end
+            # A generic sentence about having selected evidence is content-free under
+            # scorer 5.2.2.  If the model supplied no usable quote, cite a short exact
+            # extract instead: it cannot invent a fact, keeps offsets auditable, and is
+            # far below the scorer's 8,000-character citation cap.
+            claim_text = chunk.text[:_FALLBACK_CLAIM_CHARS]
+            if len(chunk.text) > _FALLBACK_CLAIM_CHARS:
+                claim_text = claim_text.rsplit(" ", 1)[0] or claim_text
+            start = chunk.span_start
+            end = start + len(claim_text)
         claims.append(
             {
                 "doc_id": chunk.doc_id,
                 "span_start": start,
                 "span_end": end,
-                "claim": "This pre-cutoff passage was used as evidence for the prediction.",
+                "claim": claim_text,
             }
         )
         used.append(evidence_id)
