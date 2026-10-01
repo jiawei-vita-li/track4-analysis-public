@@ -6,6 +6,7 @@ the quote's source chunk is identifiable so the chunk's own offsets can stand
 in). Claims that cannot be grounded are dropped — an ungrounded claim risks the
 faithfulness gate, while a dropped one merely loses a little coverage.
 """
+
 from __future__ import annotations
 
 import json
@@ -13,11 +14,13 @@ import time
 from dataclasses import dataclass, field
 
 from .client import ModelClient
+from .evidence_binding import retrieve_admissible, task_row_fallback
 from .indexer import Chunk, IndexedCorpus
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 from .queries import build_queries
-from .retriever import BM25Index
+from .retriever import BM25Index, ScoredChunk
 from .span_finder import find_span
+
 
 @dataclass
 class EntityResult:
@@ -123,7 +126,12 @@ def run_entity(
     started = time.perf_counter()
     queries = build_queries(task, entity)
     retrieval_started = time.perf_counter()
-    scored = index.search_multi(queries, top_k, fusion="rrf")
+    entity_id = str(entity.get("entity_id", ""))
+    scored = retrieve_admissible(index, queries, corpus, entity_id, top_k)
+    if not scored:
+        fallback = task_row_fallback(corpus, entity_id)
+        if fallback is not None:
+            scored = [ScoredChunk(fallback, 0.0)]
     retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
     retrieved = [item.chunk for item in scored]
     model_started = time.perf_counter()
@@ -139,9 +147,7 @@ def run_entity(
 
     point = parsed.get("point_forecast")
     point_value = float(point) if isinstance(point, (int, float)) else None
-    claims, dropped = _ground_claims(
-        parsed.get("evidence") or [], corpus, retrieved
-    )
+    claims, dropped = _ground_claims(parsed.get("evidence") or [], corpus, retrieved)
 
     prediction: dict = {
         "entity_id": entity.get("entity_id", ""),

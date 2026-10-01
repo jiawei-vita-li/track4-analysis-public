@@ -16,6 +16,7 @@ Requires an OpenAI-compatible model server at ``$MODEL_ENDPOINT`` (injected by
 the harness at scoring time; locally use ollama/llama.cpp or ``--mock`` for a
 network-free smoke run with a canned model reply).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -64,7 +65,9 @@ from .task_predictor import run_task_prediction
 
 #: `[1] doc_id=... (doc_date=...)` followed by the excerpt in triple quotes, as
 #: `prompts.build_user_prompt` emits it.
-_EXCERPT_RE = re.compile(r'\[\d+\] doc_id=(\S+) \(doc_date=[^)]*\)\n"""(.*?)"""', re.DOTALL)
+_EXCERPT_RE = re.compile(
+    r'\[\d+\] doc_id=(\S+) \(doc_date=[^)]*\)\n"""(.*?)"""', re.DOTALL
+)
 _ALLOWED_LABELS_RE = re.compile(r"^ALLOWED LABELS: (.+)$", re.MULTILINE)
 _TARGET_TYPE_RE = re.compile(r"^TARGET: .*\((\w+)\)$", re.MULTILINE)
 _ENTITY_NUMERIC_RE = re.compile(r"^  \w+: (-?\d+(?:\.\d+)?)$", re.MULTILINE)
@@ -83,7 +86,9 @@ def _fallback_used(task: dict, final: dict, result: object) -> bool:
         return True
     target = task.get("target") if isinstance(task.get("target"), dict) else {}
     target_type = task.get("target_type") or target.get("type")
-    if target_type == "classification" and final.get("label") != prediction.get("label"):
+    if target_type == "classification" and final.get("label") != prediction.get(
+        "label"
+    ):
         return True
     raw_point = prediction.get("point_forecast")
     if (
@@ -93,10 +98,9 @@ def _fallback_used(task: dict, final: dict, result: object) -> bool:
         or final.get("point_forecast") != raw_point
     ):
         return True
-    return (
-        final.get("interval") != prediction.get("interval")
-        or final.get("claims") != prediction.get("claims")
-    )
+    return final.get("interval") != prediction.get("interval") or final.get(
+        "claims"
+    ) != prediction.get("claims")
 
 
 def _verbatim_quote(excerpt: str) -> str:
@@ -149,7 +153,9 @@ def _mock_reply(system: str, user: str) -> str:
                 ]
             point = numeric[0] if target_type == "ranking" and numeric else 0.0
             if target_type == "ranking":
-                point += index * 1e-9  # deterministic non-tie for identical feature rows
+                point += (
+                    index * 1e-9
+                )  # deterministic non-tie for identical feature rows
             half = max(abs(point) * 0.5, 1.0)
             row = {
                 "entity_id": card.get("entity_id"),
@@ -221,6 +227,10 @@ def run(
     task = json.loads(task_path.read_text(encoding="utf-8"))
     corpus = build_index(corpus_dir)
     index = BM25Index(corpus.chunks, task["cutoff_date"])
+    # The scorer exposes each entity's own task row as the synthetic ``task``
+    # document.  Add it only after BM25 construction so retrieval scores remain
+    # based on the frozen corpus exactly as before R2.6.
+    corpus = corpus.with_task_table(task)
     results = []
     failures: dict[str, str] = {}
     task_prediction_trace: dict = {}
@@ -249,7 +259,9 @@ def run(
         results.extend(predicted.results)
         task_prediction_trace = predicted.trace
         for entity_id in plan.deferred_entity_ids:
-            failures[entity_id] = "primary batch budget exhausted; deterministic fallback"
+            failures[entity_id] = (
+                "primary batch budget exhausted; deterministic fallback"
+            )
         successful_ids = {
             str(result.prediction.get("entity_id", "")) for result in predicted.results
         }
@@ -273,7 +285,9 @@ def run(
                     f"{type(exc).__name__}: {exc}",
                     file=sys.stderr,
                 )
-                failures[str(entity.get("entity_id", ""))] = f"{type(exc).__name__}: {exc}"
+                failures[str(entity.get("entity_id", ""))] = (
+                    f"{type(exc).__name__}: {exc}"
+                )
     else:
         raise ValueError(f"unknown prediction mode: {prediction_mode!r}")
     answer = build_answer(task, results, corpus)
@@ -294,12 +308,16 @@ def run(
         for row in answer["entity_predictions"]:
             entity_id = row["entity_id"]
             result = by_id.get(entity_id)
-            entity_trace = dict(result.trace) if result is not None else {
-                "entity_id": entity_id,
-                "queries": [],
-                "retrieved": [],
-                "latency_ms": {},
-            }
+            entity_trace = (
+                dict(result.trace)
+                if result is not None
+                else {
+                    "entity_id": entity_id,
+                    "queries": [],
+                    "retrieved": [],
+                    "latency_ms": {},
+                }
+            )
             entity_trace["fallback_used"] = _fallback_used(task, row, result)
             entity_trace["failure"] = failures.get(entity_id)
             entity_trace["model_raw"] = result.model_raw if result is not None else None
@@ -322,7 +340,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--task", type=Path, required=True)
     parser.add_argument("--corpus", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--trace", type=Path, help="Optional debug trace; never written into answer.json.")
+    parser.add_argument(
+        "--trace",
+        type=Path,
+        help="Optional debug trace; never written into answer.json.",
+    )
     parser.add_argument(
         "--prediction-mode",
         choices=("task", "entity"),

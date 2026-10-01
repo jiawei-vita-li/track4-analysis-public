@@ -4,13 +4,14 @@ The House model sees the complete structured entity table, but only compact
 pre-cutoff evidence cards for the entities it must predict in a given batch.
 Citation offsets never enter the prompt: they stay in trusted local metadata.
 """
+
 from __future__ import annotations
 
 import json
-import math
 from dataclasses import dataclass
 from typing import Any
 
+from .evidence_binding import retrieve_admissible, task_row_fallback
 from .indexer import Chunk, IndexedCorpus
 from .queries import build_queries
 from .retriever import BM25Index
@@ -61,10 +62,7 @@ class TaskContext:
 
     @property
     def entity_table(self) -> list[dict[str, Any]]:
-        return [
-            {"entity_id": card.entity_id, **card.features}
-            for card in self.cards
-        ]
+        return [{"entity_id": card.entity_id, **card.features} for card in self.cards]
 
 
 @dataclass(frozen=True)
@@ -90,12 +88,13 @@ def build_task_context(
     evidence_per_entity: int,
 ) -> TaskContext:
     """Retrieve compact, cutoff-safe evidence cards for the trusted roster."""
-    del corpus  # The index already contains only validated, pre-cutoff chunks.
     cards: list[EntityCard] = []
     for entity_number, entity in enumerate(task.get("entities") or [], start=1):
         entity_id = str(entity.get("entity_id", ""))
         queries = build_queries(task, entity)
-        hits = index.search_multi(queries, evidence_per_entity, fusion="rrf")
+        hits = retrieve_admissible(
+            index, queries, corpus, entity_id, evidence_per_entity
+        )
         evidence = tuple(
             EvidenceItem(
                 evidence_id=f"E{entity_number}_{hit_number}",
@@ -104,6 +103,16 @@ def build_task_context(
             )
             for hit_number, hit in enumerate(hits, start=1)
         )
+        if not evidence:
+            fallback = task_row_fallback(corpus, entity_id)
+            if fallback is not None:
+                evidence = (
+                    EvidenceItem(
+                        evidence_id=f"E{entity_number}_TASK",
+                        chunk=fallback,
+                        score=0.0,
+                    ),
+                )
         cards.append(
             EntityCard(
                 entity_id=entity_id,

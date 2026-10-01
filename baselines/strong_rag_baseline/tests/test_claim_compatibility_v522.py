@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -98,7 +99,8 @@ def test_one_and_multi_entity_outputs_use_only_flat_verbatim_claims(
         top_k=10,
     )
     assert len(answer["entity_predictions"]) == expected_entities
-    corpus_text = build_index(unit / "corpus").doc_texts
+    task = json.loads((unit / "task.json").read_text(encoding="utf-8"))
+    corpus_text = build_index(unit / "corpus").with_task_table(task).doc_texts
     for row in answer["entity_predictions"]:
         assert row["claims"]
         for claim in row["claims"]:

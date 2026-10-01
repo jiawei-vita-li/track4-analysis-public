@@ -21,7 +21,13 @@ from baselines.strong_rag_baseline.safety import (
 def corpus() -> IndexedCorpus:
     text = "Entity guidance supports a possible future outcome."
     chunk = Chunk("DOC", "2026-01-01", 0, len(text), text)
-    return IndexedCorpus([chunk], {"DOC": text}, {"DOC": "2026-01-01"})
+    return IndexedCorpus(
+        [chunk],
+        {"DOC": text},
+        {"DOC": "2026-01-01"},
+        doc_entity_ids={"DOC": ("A", "B")},
+        labels_present=True,
+    )
 
 
 def task(target_type: str) -> dict:
@@ -54,7 +60,9 @@ def test_missing_results_become_complete_safe_roster(target_type: str) -> None:
     preflight(current_task, answer, corpus())
     assert [row["entity_id"] for row in answer["entity_predictions"]] == ["A", "B"]
     assert all(row["claims"] for row in answer["entity_predictions"])
-    assert all(math.isfinite(row["point_forecast"]) for row in answer["entity_predictions"])
+    assert all(
+        math.isfinite(row["point_forecast"]) for row in answer["entity_predictions"]
+    )
     assert all("rank" not in row for row in answer["entity_predictions"])
     if target_type == "classification":
         assert all(row["label"] == "yes" for row in answer["entity_predictions"])
@@ -62,7 +70,9 @@ def test_missing_results_become_complete_safe_roster(target_type: str) -> None:
         assert all("label" not in row for row in answer["entity_predictions"])
 
     official = build_answer(current_task, repaired, corpus())
-    schema_path = resources.files("qfbench2_common") / "schemas" / "analysis.schema.json"
+    schema_path = (
+        resources.files("qfbench2_common") / "schemas" / "analysis.schema.json"
+    )
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
     jsonschema.Draft202012Validator(schema).validate(official)
 
@@ -75,7 +85,9 @@ def test_bad_numbers_claims_and_duplicate_results_are_repaired() -> None:
             "label": None,
             "point_forecast": float("nan"),
             "interval": {"level": 0.5, "lo": float("inf"), "hi": -1},
-            "claims": [{"doc_id": "UNKNOWN", "span_start": 0, "span_end": 1, "claim": "x"}],
+            "claims": [
+                {"doc_id": "UNKNOWN", "span_start": 0, "span_end": 1, "claim": "x"}
+            ],
         },
         dropped_claims=0,
         model_raw="bad",

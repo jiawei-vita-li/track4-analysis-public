@@ -17,6 +17,7 @@ express. These tests pin the fix.
 
 Standard library only, like the pipeline under test.
 """
+
 from __future__ import annotations
 
 import json
@@ -31,10 +32,20 @@ RANKING_UNIT = _REPO / "units" / "t4-cotpos-202411-us10"
 
 
 def _run_mock(unit: Path, out: Path) -> dict:
-    assert main(
-        ["--task", str(unit / "task.json"), "--corpus", str(unit / "corpus"),
-         "--out", str(out), "--mock"]
-    ) == 0
+    assert (
+        main(
+            [
+                "--task",
+                str(unit / "task.json"),
+                "--corpus",
+                str(unit / "corpus"),
+                "--out",
+                str(out),
+                "--mock",
+            ]
+        )
+        == 0
+    )
     return json.loads(out.read_text(encoding="utf-8"))
 
 
@@ -56,12 +67,13 @@ def test_the_quote_resolves_to_the_span_it_claims(tmp_path: Path) -> None:
     and checks the span, rather than trusting that the pipeline said so.
     """
     answer = _run_mock(EXAMPLE_UNIT, tmp_path / "a.json")
-    corpus = build_index(EXAMPLE_UNIT / "corpus")
+    task = json.loads((EXAMPLE_UNIT / "task.json").read_text(encoding="utf-8"))
+    corpus = build_index(EXAMPLE_UNIT / "corpus").with_task_table(task)
     for row in answer["entity_predictions"]:
         for claim in row["claims"]:
             doc_text = corpus.doc_texts[claim["doc_id"]]
             assert 0 <= claim["span_start"] < claim["span_end"] <= len(doc_text)
-            assert doc_text[claim["span_start"]:claim["span_end"]].strip(), (
+            assert doc_text[claim["span_start"] : claim["span_end"]].strip(), (
                 "the cited span is empty or whitespace"
             )
 
@@ -98,5 +110,7 @@ def test_a_prompt_with_no_excerpt_cites_nothing(tmp_path: Path) -> None:
     mock must not invent a doc_id to fill the gap -- a fabricated citation is
     `t4.citation_unresolved`, the same -0.27, plus a false claim about the corpus.
     """
-    reply = json.loads(_mock_reply("sys", "TASK: something\nTARGET: x (classification)\n"))
+    reply = json.loads(
+        _mock_reply("sys", "TASK: something\nTARGET: x (classification)\n")
+    )
     assert reply["evidence"] == []

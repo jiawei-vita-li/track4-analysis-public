@@ -1,4 +1,5 @@
 """End-to-end pipeline test on the example unit with a mock model client."""
+
 from __future__ import annotations
 
 import json
@@ -13,7 +14,8 @@ DOC_ID = "EDGAR_0000320193_8K_20240201"
 
 
 def make_mock_reply() -> str:
-    corpus = build_index(EXAMPLE_UNIT / "corpus")
+    task = json.loads((EXAMPLE_UNIT / "task.json").read_text(encoding="utf-8"))
+    corpus = build_index(EXAMPLE_UNIT / "corpus").with_task_table(task)
     doc_text = corpus.doc_texts[DOC_ID]
     quote = doc_text[10:150]
     return json.dumps(
@@ -62,7 +64,8 @@ def test_pipeline_produces_grounded_schema_valid_answer(tmp_path):
     assert entity["label"] == "beat"
     assert entity["interval"]["lo"] <= entity["interval"]["hi"]
 
-    corpus = build_index(EXAMPLE_UNIT / "corpus")
+    task = json.loads((EXAMPLE_UNIT / "task.json").read_text(encoding="utf-8"))
+    corpus = build_index(EXAMPLE_UNIT / "corpus").with_task_table(task)
     assert entity["claims"], "expected at least one grounded claim"
     for claim in entity["claims"]:
         doc_text = corpus.doc_texts[claim["doc_id"]]
@@ -100,9 +103,12 @@ def test_mock_cli_flag_smoke(tmp_path):
 
     exit_code = main(
         [
-            "--task", str(EXAMPLE_UNIT / "task.json"),
-            "--corpus", str(EXAMPLE_UNIT / "corpus"),
-            "--out", str(tmp_path / "answer.json"),
+            "--task",
+            str(EXAMPLE_UNIT / "task.json"),
+            "--corpus",
+            str(EXAMPLE_UNIT / "corpus"),
+            "--out",
+            str(tmp_path / "answer.json"),
             "--mock",
         ]
     )

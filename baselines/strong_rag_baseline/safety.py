@@ -56,7 +56,9 @@ def _fallback_point(task: Mapping, entity: Mapping) -> float:
     return values[len(values) // 2]
 
 
-def _eligible_chunks(task: Mapping, corpus: IndexedCorpus) -> list[Chunk]:
+def _eligible_chunks(
+    task: Mapping, corpus: IndexedCorpus, entity_id: str
+) -> list[Chunk]:
     cutoff = task.get("cutoff_date")
     return sorted(
         (
@@ -67,13 +69,21 @@ def _eligible_chunks(task: Mapping, corpus: IndexedCorpus) -> list[Chunk]:
             and corpus.doc_dates[chunk.doc_id] <= cutoff
             and 0 <= chunk.span_start < chunk.span_end
             and chunk.span_end <= len(corpus.doc_texts.get(chunk.doc_id, ""))
+            and corpus.admits_citation(
+                entity_id, chunk.doc_id, chunk.span_start, chunk.span_end
+            )
         ),
         key=lambda chunk: (chunk.doc_id, chunk.span_start, chunk.span_end),
     )
 
 
 def _safe_claims(
-    task: Mapping, prediction: Mapping, corpus: IndexedCorpus, fallback: Chunk
+    task: Mapping,
+    prediction: Mapping,
+    corpus: IndexedCorpus,
+    fallback: Chunk,
+    entity_id: str,
+    binding_violations: list[dict] | None = None,
 ) -> list[dict]:
     cutoff = task["cutoff_date"]
     kept: list[dict] = []
@@ -85,7 +95,7 @@ def _safe_claims(
         claim_text = claim.get("claim")
         text = corpus.doc_texts.get(doc_id) if isinstance(doc_id, str) else None
         doc_date = corpus.doc_dates.get(doc_id) if isinstance(doc_id, str) else None
-        if (
+        structurally_invalid = (
             text is None
             or not isinstance(doc_date, str)
             or doc_date > cutoff
@@ -96,7 +106,17 @@ def _safe_claims(
             or not (0 <= start < end <= len(text))
             or not isinstance(claim_text, str)
             or not claim_text.strip()
-        ):
+        )
+        if structurally_invalid:
+            continue
+        if not corpus.admits_citation(entity_id, doc_id, start, end):
+            if binding_violations is not None:
+                binding_violations.append(
+                    {
+                        "doc_id": doc_id,
+                        "reason": "document does not admit prediction entity",
+                    }
+                )
             continue
         kept.append(
             {
@@ -108,12 +128,15 @@ def _safe_claims(
         )
     if kept:
         return kept
+    claim_text = fallback.text[:200]
+    if len(fallback.text) > 200:
+        claim_text = claim_text.rsplit(" ", 1)[0] or claim_text
     return [
         {
             "doc_id": fallback.doc_id,
             "span_start": fallback.span_start,
-            "span_end": fallback.span_end,
-            "claim": "Deterministic fallback: this is the top available pre-cutoff passage.",
+            "span_end": fallback.span_start + len(claim_text),
+            "claim": claim_text,
         }
     ]
 
@@ -122,10 +145,6 @@ def sanitize_results(
     task: Mapping, results: list[EntityResult], corpus: IndexedCorpus
 ) -> list[EntityResult]:
     """Return exactly one safe result for every trusted roster entity."""
-    eligible = _eligible_chunks(task, corpus)
-    if not eligible:
-        raise ContractError("no dated pre-cutoff corpus chunk can support a valid fallback")
-    fallback_chunk = eligible[0]
     first_by_id: dict[str, EntityResult] = {}
     for result in results:
         entity_id = result.prediction.get("entity_id")
@@ -146,23 +165,40 @@ def sanitize_results(
         entity_id = entity.get("entity_id")
         if not isinstance(entity_id, str) or not entity_id:
             raise ContractError("trusted roster contains an invalid entity_id")
+        eligible = _eligible_chunks(task, corpus, entity_id)
+        if not eligible:
+            raise ContractError(
+                f"{entity_id}: no dated pre-cutoff entity-admissible evidence can support a "
+                "valid fallback"
+            )
+        fallback_chunk = eligible[0]
         original = first_by_id.get(entity_id)
         raw = original.prediction if original is not None else {}
         point = _finite(raw.get("point_forecast"))
         if point is None:
             point = _fallback_point(task, entity)
 
-        interval = raw.get("interval") if isinstance(raw.get("interval"), Mapping) else {}
+        interval = (
+            raw.get("interval") if isinstance(raw.get("interval"), Mapping) else {}
+        )
         lo, hi = _finite(interval.get("lo")), _finite(interval.get("hi"))
         if lo is None or hi is None or lo > hi:
             half = max(abs(point), 1.0)
             lo, hi = point - half, point + half
 
+        binding_violations: list[dict] = []
         prediction: dict = {
             "entity_id": entity_id,
             "point_forecast": point,
             "interval": {"level": level, "lo": lo, "hi": hi},
-            "claims": _safe_claims(task, raw, corpus, fallback_chunk),
+            "claims": _safe_claims(
+                task,
+                raw,
+                corpus,
+                fallback_chunk,
+                entity_id,
+                binding_violations,
+            ),
         }
         if target_type == "classification":
             label = raw.get("label")
@@ -171,12 +207,27 @@ def sanitize_results(
                     raise ContractError("classification task has no label vocabulary")
                 label = labels[0]
             prediction["label"] = label
+        trace = dict(
+            original.trace
+            if original
+            else {"entity_id": entity_id, "fallback_used": True}
+        )
+        if binding_violations:
+            trace["entity_binding_violations"] = binding_violations
+            if original is not None:
+                # ``cli.run`` keeps the original result objects for the optional
+                # trace file, so copy the defense-in-depth event there as well.
+                original.trace["entity_binding_violations"] = binding_violations
         sanitized.append(
             EntityResult(
                 prediction=prediction,
                 dropped_claims=(original.dropped_claims if original else 0),
-                model_raw=(original.model_raw if original else "fallback: missing entity result"),
-                trace=(original.trace if original else {"entity_id": entity_id, "fallback_used": True}),
+                model_raw=(
+                    original.model_raw
+                    if original
+                    else "fallback: missing entity result"
+                ),
+                trace=trace,
             )
         )
     return sanitized
@@ -192,7 +243,9 @@ def preflight(task: Mapping, answer: Mapping, corpus: IndexedCorpus) -> None:
     trusted = [entity.get("entity_id") for entity in task.get("entities") or []]
     observed = [row.get("entity_id") for row in rows if isinstance(row, Mapping)]
     if observed != trusted or len(set(observed)) != len(observed):
-        raise ContractError("entity roster is missing, duplicated, unknown, or out of order")
+        raise ContractError(
+            "entity roster is missing, duplicated, unknown, or out of order"
+        )
 
     target = task.get("target") or {}
     target_type = task_target_type(task)
@@ -205,19 +258,33 @@ def preflight(task: Mapping, answer: Mapping, corpus: IndexedCorpus) -> None:
     for row in rows:
         if target_type == "classification" and row.get("label") not in labels:
             raise ContractError(f"{row.get('entity_id')}: invalid classification label")
-        if target_type in {"regression", "ranking"} and _finite(row.get("point_forecast")) is None:
+        if (
+            target_type in {"regression", "ranking"}
+            and _finite(row.get("point_forecast")) is None
+        ):
             raise ContractError(f"{row.get('entity_id')}: point_forecast is not finite")
         interval = row.get("interval")
         if not isinstance(interval, Mapping):
             raise ContractError(f"{row.get('entity_id')}: missing interval")
         lo, hi = _finite(interval.get("lo")), _finite(interval.get("hi"))
-        if _finite(interval.get("level")) != level or lo is None or hi is None or lo > hi:
+        if (
+            _finite(interval.get("level")) != level
+            or lo is None
+            or hi is None
+            or lo > hi
+        ):
             raise ContractError(f"{row.get('entity_id')}: invalid interval")
         claims = row.get("claims")
         if not isinstance(claims, list) or not claims:
             raise ContractError(f"{row.get('entity_id')}: missing claims")
         # Reuse the same strict filter: if any item would be dropped, the answer is invalid.
-        if _safe_claims(task, row, corpus, _eligible_chunks(task, corpus)[0]) != claims:
+        entity_id = str(row.get("entity_id", ""))
+        eligible = _eligible_chunks(task, corpus, entity_id)
+        if not eligible:
+            raise ContractError(
+                f"{entity_id}: no dated pre-cutoff entity-admissible evidence"
+            )
+        if _safe_claims(task, row, corpus, eligible[0], entity_id) != claims:
             raise ContractError(f"{row.get('entity_id')}: invalid citation")
         if "rank" in row:
             some_rank = True
@@ -225,5 +292,7 @@ def preflight(task: Mapping, answer: Mapping, corpus: IndexedCorpus) -> None:
             if isinstance(rank, bool) or not isinstance(rank, int):
                 raise ContractError(f"{row.get('entity_id')}: invalid rank")
             ranks.append(rank)
-    if some_rank and (len(ranks) != len(rows) or sorted(ranks) != list(range(1, len(rows) + 1))):
+    if some_rank and (
+        len(ranks) != len(rows) or sorted(ranks) != list(range(1, len(rows) + 1))
+    ):
         raise ContractError("optional ranks must be a complete permutation")
