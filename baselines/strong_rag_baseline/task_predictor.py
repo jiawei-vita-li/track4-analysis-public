@@ -1,4 +1,5 @@
 """Task-level House prediction over structured rows and compact evidence cards."""
+
 from __future__ import annotations
 
 import json
@@ -10,6 +11,7 @@ from typing import Any
 from .agent import EntityResult, _parse_model_json, _safe_interval
 from .client import ModelClient
 from .indexer import IndexedCorpus
+from .target_semantics import consistency_diagnostics
 from .task_context import BatchPlan, EntityCard, TaskContext
 
 TASK_SYSTEM_PROMPT = """\
@@ -19,6 +21,9 @@ pre-cutoff evidence. Do not use remembered outcomes or infer post-cutoff facts. 
 object and no prose. For evidence, select an evidence_id supplied for that same entity and copy a
 short verbatim quote from its text. Never invent document IDs or character offsets. Keep all numeric predictions in the
 target's own units, and do not copy an unrelated numeric feature merely because it is available.
+A structured numeric feature is a predictor, not automatically a candidate output. Treat unknown
+compiled semantics as unknown rather than filling them from domain knowledge. For ranking, every
+entity score must express the same compiled target quantity on one shared scale.
 A related passage is not necessarily support: prefer explicit measurements, guidance, trends,
 and comparisons that bear on the prediction."""
 
@@ -72,7 +77,8 @@ def build_task_prompt(
         "task_id": context.task_id,
         "task_prompt": context.prompt,
         "cutoff_date": context.cutoff_date,
-        "target": context.target,
+        "raw_target": context.target,
+        "compiled_target_semantics": context.semantics.prompt_value(),
         "interval_level": context.interval_level,
         "complete_entity_table": context.entity_table,
         "prediction_batch": [
@@ -88,7 +94,12 @@ def build_task_prompt(
         "Choose one or two evidence entries only from that entity's card; quotes must be exact. "
         "The interval level is fixed by the task and must not be changed."
     )
-    return "TASK_CONTEXT_JSON:\n" + json.dumps(payload, ensure_ascii=False) + "\n" + instructions
+    return (
+        "TASK_CONTEXT_JSON:\n"
+        + json.dumps(payload, ensure_ascii=False)
+        + "\n"
+        + instructions
+    )
 
 
 def _rows_from_raw(raw: str, cards: tuple[EntityCard, ...]) -> list[dict[str, Any]]:
@@ -98,7 +109,9 @@ def _rows_from_raw(raw: str, cards: tuple[EntityCard, ...]) -> list[dict[str, An
         return [row for row in rows if isinstance(row, dict)]
     # Backward-compatible single-entity shape keeps the original controlled
     # tests and local model harness useful during the transition.
-    if len(cards) == 1 and any(key in parsed for key in ("label", "point_forecast", "score")):
+    if len(cards) == 1 and any(
+        key in parsed for key in ("label", "point_forecast", "score")
+    ):
         return [{"entity_id": cards[0].entity_id, **parsed}]
     raise ValueError("task-level reply has no predictions array")
 
@@ -121,13 +134,19 @@ def _row_failures(
         if target_type == "classification" and row.get("label") not in labels:
             failures.append(f"{row.get('entity_id')}: invalid label")
         if target_type in {"regression", "ranking"}:
-            value = row.get("score") if target_type == "ranking" else row.get("point_forecast")
+            value = (
+                row.get("score")
+                if target_type == "ranking"
+                else row.get("point_forecast")
+            )
             if _finite(value) is None:
                 failures.append(f"{row.get('entity_id')}: non-finite point")
     return failures
 
 
-def _claim_from_card(card: EntityCard, row: dict[str, Any]) -> tuple[list[dict], list[str]]:
+def _claim_from_card(
+    card: EntityCard, row: dict[str, Any]
+) -> tuple[list[dict], list[str]]:
     allowed = {item.evidence_id: item for item in card.evidence}
     selected: list[tuple[str, str]] = []
     evidence = row.get("evidence")
@@ -137,7 +156,11 @@ def _claim_from_card(card: EntityCard, row: dict[str, Any]) -> tuple[list[dict],
                 continue
             evidence_id = value.get("evidence_id")
             quote = value.get("quote")
-            if isinstance(evidence_id, str) and evidence_id in allowed and isinstance(quote, str):
+            if (
+                isinstance(evidence_id, str)
+                and evidence_id in allowed
+                and isinstance(quote, str)
+            ):
                 selected.append((evidence_id, quote))
     # Accept the earlier evidence_ids shape as a graceful compatibility path.
     if not selected and isinstance(row.get("evidence_ids"), list):
@@ -302,5 +325,9 @@ def run_task_prediction(
         "raw_outputs": raw_outputs,
         "parse_failures": parse_failures,
         "batch_latency_ms": batch_latencies,
+        "compiled_target_semantics": context.semantics.prompt_value(),
+        "semantic_consistency": consistency_diagnostics(
+            context.semantics, [result.prediction for result in results]
+        ),
     }
     return TaskPredictionRun(results=tuple(results), trace=trace)

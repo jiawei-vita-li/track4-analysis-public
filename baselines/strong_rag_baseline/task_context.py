@@ -15,6 +15,7 @@ from .evidence_binding import retrieve_admissible, task_row_fallback
 from .indexer import Chunk, IndexedCorpus
 from .queries import build_queries
 from .retriever import BM25Index
+from .target_semantics import TargetSemantics, compile_target_semantics
 
 _META_FIELDS = {"corpus_ref"}
 
@@ -58,6 +59,7 @@ class TaskContext:
     target: dict[str, Any]
     cutoff_date: str
     interval_level: float
+    semantics: TargetSemantics
     cards: tuple[EntityCard, ...]
 
     @property
@@ -130,6 +132,7 @@ def build_task_context(
         target=dict(target),
         cutoff_date=str(task.get("cutoff_date", "")),
         interval_level=float(task.get("interval_level", 0.9)),
+        semantics=compile_target_semantics(task),
         cards=tuple(cards),
     )
 
@@ -159,7 +162,8 @@ def plan_batches(
         {
             "task_id": context.task_id,
             "prompt": context.prompt,
-            "target": context.target,
+            "raw_target": context.target,
+            "compiled_target_semantics": context.semantics.prompt_value(),
             "cutoff_date": context.cutoff_date,
             "interval_level": context.interval_level,
             "complete_entity_table": context.entity_table,

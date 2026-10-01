@@ -132,7 +132,7 @@ def _mock_reply(system: str, user: str) -> str:
     if marker in user:
         decoder = json.JSONDecoder()
         payload, _ = decoder.raw_decode(user.split(marker, 1)[1])
-        target = payload.get("target") or {}
+        target = payload.get("raw_target") or payload.get("target") or {}
         target_type = target.get("type", "classification")
         labels = target.get("labels") or []
         predictions = []
