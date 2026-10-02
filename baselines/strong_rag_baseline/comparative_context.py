@@ -10,7 +10,7 @@ import math
 import re
 import statistics
 from dataclasses import dataclass
-from typing import Any, Mapping, Sequence
+from typing import Any, Iterable, Mapping, Sequence
 
 from .target_semantics import TargetSemantics
 
@@ -33,6 +33,17 @@ class NumericFeatureSummary:
         return {
             "feature_name": self.feature_name,
             "source": self.source,
+            "valid_count": self.valid_count,
+            "missing_count": self.missing_count,
+            "median": self.median,
+            "min": self.minimum,
+            "max": self.maximum,
+        }
+
+    def compact_prompt_value(self) -> dict[str, Any]:
+        """Prompt fields that add comparison information beyond the entity table."""
+        return {
+            "feature_name": self.feature_name,
             "valid_count": self.valid_count,
             "missing_count": self.missing_count,
             "median": self.median,
@@ -71,7 +82,6 @@ class EntityRelativeFeatures:
             "entity_id": self.entity_id,
             "relative_numeric_features": {
                 feature.feature_name: {
-                    "raw_value": feature.raw_value,
                     "ordinal_rank": feature.ordinal_rank,
                     "percentile": feature.percentile,
                     "relation_to_median": feature.relation_to_median,
@@ -107,19 +117,26 @@ class ComparativeContext:
     def comparison_count(self) -> int:
         return sum(len(entity.features) for entity in self.per_entity_relative_features)
 
-    def prompt_value(self) -> dict[str, Any]:
+    def prompt_value(
+        self, *, entity_ids: Iterable[str] | None = None
+    ) -> dict[str, Any]:
+        """Return compact global summaries plus batch-local relative records.
+
+        Statistics and ranks were compiled against the complete trusted roster.
+        ``entity_ids`` only filters which already-computed relative rows are repeated
+        in the current prediction request.
+        """
+        included = None if entity_ids is None else set(entity_ids)
         return {
             "version": self.version,
             "numeric_features": [
-                feature.prompt_value() for feature in self.numeric_features
-            ],
-            "skipped_numeric_features": [
-                feature.prompt_value() for feature in self.skipped_numeric_features
+                feature.compact_prompt_value() for feature in self.numeric_features
             ],
             "per_entity_relative_features": [
                 entity.prompt_value()
                 for entity in self.per_entity_relative_features
                 if entity.features
+                and (included is None or entity.entity_id in included)
             ],
             "interpretation": (
                 "Ranks are ascending within the same feature (1 = lowest). "

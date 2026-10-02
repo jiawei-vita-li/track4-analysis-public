@@ -7,13 +7,13 @@ Citation offsets never enter the prompt: they stay in trusted local metadata.
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from typing import Any
 
 from .comparative_context import ComparativeContext, compile_comparative_context
 from .evidence_binding import retrieve_admissible, task_row_fallback
 from .indexer import Chunk, IndexedCorpus
+from .prompting import render_task_request
 from .queries import build_queries
 from .retriever import BM25Index
 from .target_semantics import TargetSemantics, compile_target_semantics
@@ -73,7 +73,14 @@ class TaskContext:
 class BatchPlan:
     batches: tuple[tuple[EntityCard, ...], ...]
     deferred_entity_ids: tuple[str, ...]
-    estimated_input_chars: tuple[int, ...]
+    planned_actual_prompt_chars: tuple[int, ...]
+    single_entity_prompt_overflow: tuple[str, ...]
+    max_input_chars: int
+
+    @property
+    def estimated_input_chars(self) -> tuple[int, ...]:
+        """Backward-compatible alias for callers that predate exact rendering."""
+        return self.planned_actual_prompt_chars
 
 
 def _features(entity: dict[str, Any]) -> dict[str, Any]:
@@ -147,10 +154,6 @@ def build_task_context(
     )
 
 
-def _json_chars(value: Any) -> int:
-    return len(json.dumps(value, ensure_ascii=False, separators=(",", ":")))
-
-
 def plan_batches(
     context: TaskContext,
     *,
@@ -160,31 +163,19 @@ def plan_batches(
     max_output_chars: int,
     max_primary_requests: int,
 ) -> BatchPlan:
-    """Greedily pack deterministic batches and defer overflow instead of overspending.
+    """Greedily pack using the exact full request sent to the House client.
 
-    The shared full entity table is counted in every batch.  An entity whose card
-    cannot fit alone is still admitted (the model needs at least its structured
-    row), while evidence is clipped by ``build_task_context`` rather than here.
-    If the plan would require more primary calls than allowed, remaining entities
-    are deferred to the existing deterministic safety fallback.
+    Every candidate batch is rendered through the shared prompt renderer.  A card
+    that cannot fit by itself is never sent; it is recorded and deferred to the
+    existing deterministic safety fallback.  If the request budget is exhausted,
+    remaining entities are deferred through the same path.
     """
-    shared = {
-        "task_id": context.task_id,
-        "prompt": context.prompt,
-        "raw_target": context.target,
-        "compiled_target_semantics": context.semantics.prompt_value(),
-        "cutoff_date": context.cutoff_date,
-        "interval_level": context.interval_level,
-        "complete_entity_table": context.entity_table,
-    }
-    if context.comparative_context is not None:
-        shared["comparative_context"] = context.comparative_context.prompt_value()
-    shared_chars = _json_chars(shared)
     batches: list[tuple[EntityCard, ...]] = []
-    estimates: list[int] = []
+    planned_chars: list[int] = []
     deferred: list[str] = []
+    single_overflow: list[str] = []
     current: list[EntityCard] = []
-    current_chars = shared_chars
+    current_chars = 0
 
     def flush() -> None:
         nonlocal current, current_chars
@@ -192,28 +183,52 @@ def plan_batches(
             return
         if len(batches) < max_primary_requests:
             batches.append(tuple(current))
-            estimates.append(current_chars)
+            planned_chars.append(current_chars)
         else:
             deferred.extend(card.entity_id for card in current)
         current = []
-        current_chars = shared_chars
+        current_chars = 0
+
+    def exact_chars(cards: tuple[EntityCard, ...]) -> int:
+        return render_task_request(
+            context,
+            cards,
+            include_evidence=include_evidence,
+        ).total_chars
 
     for card in context.cards:
-        card_chars = _json_chars(card.prompt_value(include_evidence=include_evidence))
-        output_chars = (len(current) + 1) * 500
-        would_overflow = current and (
-            len(current) >= max_entities
-            or current_chars + card_chars > max_input_chars
-            or output_chars > max_output_chars
+        candidate = tuple([*current, card])
+        candidate_chars = exact_chars(candidate)
+        candidate_fits = (
+            len(candidate) <= max_entities
+            and candidate_chars <= max_input_chars
+            and len(candidate) * 500 <= max_output_chars
         )
-        if would_overflow:
+        if candidate_fits:
+            current = list(candidate)
+            current_chars = candidate_chars
+            continue
+
+        if current:
             flush()
-        current.append(card)
-        current_chars += card_chars
+
+        single = (card,)
+        single_chars = exact_chars(single)
+        if single_chars > max_input_chars:
+            single_overflow.append(card.entity_id)
+            deferred.append(card.entity_id)
+            continue
+        if max_entities < 1 or 500 > max_output_chars:
+            deferred.append(card.entity_id)
+            continue
+        current = [card]
+        current_chars = single_chars
     flush()
 
     return BatchPlan(
         batches=tuple(batches),
         deferred_entity_ids=tuple(deferred),
-        estimated_input_chars=tuple(estimates),
+        planned_actual_prompt_chars=tuple(planned_chars),
+        single_entity_prompt_overflow=tuple(single_overflow),
+        max_input_chars=max_input_chars,
     )

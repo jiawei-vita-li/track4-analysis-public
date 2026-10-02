@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import math
 import time
 from dataclasses import dataclass
@@ -11,28 +10,14 @@ from typing import Any
 from .agent import EntityResult, _parse_model_json, _safe_interval
 from .client import ModelClient
 from .indexer import IndexedCorpus
+from .prompting import (
+    TASK_SYSTEM_PROMPT as TASK_SYSTEM_PROMPT,
+    render_task_prompt,
+    render_task_request,
+    task_system_prompt as task_system_prompt,
+)
 from .target_semantics import consistency_diagnostics
 from .task_context import BatchPlan, EntityCard, TaskContext
-
-TASK_SYSTEM_PROMPT = """\
-You are a careful evidence-grounded forecaster. Jointly compare the complete entity table and
-predict only the entities in PREDICTION_BATCH. Use only the supplied structured fields and frozen
-pre-cutoff evidence. Do not use remembered outcomes or infer post-cutoff facts. Return one JSON
-object and no prose. For evidence, select an evidence_id supplied for that same entity and copy a
-short verbatim quote from its text. Never invent document IDs or character offsets. Keep all numeric predictions in the
-target's own units, and do not copy an unrelated numeric feature merely because it is available.
-A structured numeric feature is a predictor, not automatically a candidate output. Treat unknown
-compiled semantics as unknown rather than filling them from domain knowledge. For ranking, every
-entity score must express the same compiled target quantity on one shared scale.
-A related passage is not necessarily support: prefer explicit measurements, guidance, trends,
-and comparisons that bear on the prediction."""
-
-_COMPARATIVE_INSTRUCTIONS = """\
- Before assigning final predictions, compare the entities under the same compiled target semantics
-and use COMPARATIVE_CONTEXT to establish a shared task-level frame. Relative feature position is
-comparison evidence, not a forecast by itself. Never assume that a larger feature value implies a
-larger target unless the trusted task semantics explicitly state that relationship. For ranking,
-assign every entity score on one common target scale; never use independent local scales."""
 
 _FALLBACK_CLAIM_CHARS = 200
 
@@ -43,14 +28,6 @@ class TaskPredictionRun:
     trace: dict[str, Any]
 
 
-def task_system_prompt(*, comparative_context_enabled: bool) -> str:
-    return (
-        TASK_SYSTEM_PROMPT + _COMPARATIVE_INSTRUCTIONS
-        if comparative_context_enabled
-        else TASK_SYSTEM_PROMPT
-    )
-
-
 def _finite(value: object) -> float | None:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return None
@@ -58,65 +35,7 @@ def _finite(value: object) -> float | None:
     return converted if math.isfinite(converted) else None
 
 
-def build_task_prompt(
-    context: TaskContext,
-    cards: tuple[EntityCard, ...],
-    *,
-    include_evidence: bool,
-    repair: dict[str, Any] | None = None,
-) -> str:
-    target_type = context.target.get("type", "classification")
-    if target_type == "classification":
-        prediction_shape: dict[str, Any] = {
-            "entity_id": "trusted entity_id",
-            "label": "exactly one allowed label",
-            "point_forecast": "finite number or null",
-            "interval": {"lo": "finite number", "hi": "finite number"},
-            "evidence": [{"evidence_id": "supplied ID", "quote": "verbatim substring"}],
-        }
-    elif target_type == "ranking":
-        prediction_shape = {
-            "entity_id": "trusted entity_id",
-            "score": "finite numeric target value; larger means higher rank",
-            "interval": {"lo": "finite number", "hi": "finite number"},
-            "evidence": [{"evidence_id": "supplied ID", "quote": "verbatim substring"}],
-        }
-    else:
-        prediction_shape = {
-            "entity_id": "trusted entity_id",
-            "point_forecast": "finite numeric target value",
-            "interval": {"lo": "finite number", "hi": "finite number"},
-            "evidence": [{"evidence_id": "supplied ID", "quote": "verbatim substring"}],
-        }
-    payload: dict[str, Any] = {
-        "task_id": context.task_id,
-        "task_prompt": context.prompt,
-        "cutoff_date": context.cutoff_date,
-        "raw_target": context.target,
-        "compiled_target_semantics": context.semantics.prompt_value(),
-        "interval_level": context.interval_level,
-        "complete_entity_table": context.entity_table,
-        "prediction_batch": [
-            card.prompt_value(include_evidence=include_evidence) for card in cards
-        ],
-        "required_output": {"predictions": [prediction_shape]},
-    }
-    if context.comparative_context is not None:
-        payload["comparative_context"] = context.comparative_context.prompt_value()
-    if repair is not None:
-        payload["repair"] = repair
-    instructions = (
-        "Return every prediction_batch entity exactly once and no other entity. "
-        "Do not output optional rank; ranking is derived globally from numeric score. "
-        "Choose one or two evidence entries only from that entity's card; quotes must be exact. "
-        "The interval level is fixed by the task and must not be changed."
-    )
-    return (
-        "TASK_CONTEXT_JSON:\n"
-        + json.dumps(payload, ensure_ascii=False)
-        + "\n"
-        + instructions
-    )
+build_task_prompt = render_task_prompt
 
 
 def _rows_from_raw(raw: str, cards: tuple[EntityCard, ...]) -> list[dict[str, Any]]:
@@ -276,35 +195,51 @@ def run_task_prediction(
     results: list[EntityResult] = []
     raw_outputs: list[str] = []
     parse_failures: list[dict[str, Any]] = []
+    prompt_guard_failures: list[dict[str, Any]] = []
     batch_latencies: list[float] = []
     prompt_chars: list[int] = []
+    request_chars: list[int] = []
     repair_used = False
     request_before = int(getattr(client, "request_count", 0))
 
     for batch_number, cards in enumerate(plan.batches, start=1):
         started = time.perf_counter()
-        prompt = build_task_prompt(context, cards, include_evidence=include_evidence)
-        prompt_chars.append(len(prompt))
+        request = render_task_request(context, cards, include_evidence=include_evidence)
+        prompt_chars.append(len(request.user_prompt))
+        request_chars.append(request.total_chars)
         raw = ""
         rows: list[dict[str, Any]] = []
         failures: list[str] = []
-        try:
-            raw = client.complete(
-                task_system_prompt(
-                    comparative_context_enabled=context.comparative_context is not None
-                ),
-                prompt,
-            )
-            raw_outputs.append(raw)
-            rows = _rows_from_raw(raw, cards)
-            failures = _row_failures(rows, cards, context)
-        except Exception as exc:
-            failures = [f"{type(exc).__name__}: {exc}"]
+        guard_failed = request.total_chars > plan.max_input_chars
+        if guard_failed:
+            diagnostic = {
+                "batch": batch_number,
+                "phase": "primary",
+                "actual_chars": request.total_chars,
+                "max_input_chars": plan.max_input_chars,
+                "entity_ids": [card.entity_id for card in cards],
+            }
+            prompt_guard_failures.append(diagnostic)
+            failures = [
+                "prompt guard rejected oversized primary request: "
+                f"{request.total_chars}>{plan.max_input_chars}"
+            ]
+        else:
+            try:
+                raw = client.complete(
+                    request.system_prompt,
+                    request.user_prompt,
+                )
+                raw_outputs.append(raw)
+                rows = _rows_from_raw(raw, cards)
+                failures = _row_failures(rows, cards, context)
+            except Exception as exc:
+                failures = [f"{type(exc).__name__}: {exc}"]
 
-        if failures and allow_repair and not repair_used:
+        if failures and allow_repair and not repair_used and not guard_failed:
             repair_used = True
             parse_failures.append({"batch": batch_number, "failures": failures})
-            repair_prompt = build_task_prompt(
+            repair_request = render_task_request(
                 context,
                 cards,
                 include_evidence=include_evidence,
@@ -314,19 +249,31 @@ def run_task_prediction(
                     "instruction": "Return a complete corrected object in the required shape.",
                 },
             )
-            try:
-                raw = client.complete(
-                    task_system_prompt(
-                        comparative_context_enabled=context.comparative_context
-                        is not None
-                    ),
-                    repair_prompt,
-                )
-                raw_outputs.append(raw)
-                rows = _rows_from_raw(raw, cards)
-                failures = _row_failures(rows, cards, context)
-            except Exception as exc:
-                failures = [f"repair {type(exc).__name__}: {exc}"]
+            if repair_request.total_chars > plan.max_input_chars:
+                guard_failed = True
+                diagnostic = {
+                    "batch": batch_number,
+                    "phase": "repair",
+                    "actual_chars": repair_request.total_chars,
+                    "max_input_chars": plan.max_input_chars,
+                    "entity_ids": [card.entity_id for card in cards],
+                }
+                prompt_guard_failures.append(diagnostic)
+                failures = [
+                    "prompt guard rejected oversized repair request: "
+                    f"{repair_request.total_chars}>{plan.max_input_chars}"
+                ]
+            else:
+                try:
+                    raw = client.complete(
+                        repair_request.system_prompt,
+                        repair_request.user_prompt,
+                    )
+                    raw_outputs.append(raw)
+                    rows = _rows_from_raw(raw, cards)
+                    failures = _row_failures(rows, cards, context)
+                except Exception as exc:
+                    failures = [f"repair {type(exc).__name__}: {exc}"]
 
         if failures:
             parse_failures.append({"batch": batch_number, "failures": failures})
@@ -363,14 +310,17 @@ def run_task_prediction(
         "target_type": context.target.get("type"),
         "batch_count": len(plan.batches),
         "entities_per_batch": [len(batch) for batch in plan.batches],
-        "estimated_input_chars": list(plan.estimated_input_chars),
+        "planned_actual_prompt_chars": list(plan.planned_actual_prompt_chars),
         "deferred_entity_ids": list(plan.deferred_entity_ids),
+        "single_entity_prompt_overflow": list(plan.single_entity_prompt_overflow),
         "request_count": max(0, request_after - request_before),
         "repair_used": repair_used,
         "raw_outputs": raw_outputs,
         "parse_failures": parse_failures,
+        "prompt_guard_failures": prompt_guard_failures,
         "batch_latency_ms": batch_latencies,
         "prompt_chars": prompt_chars,
+        "request_chars": request_chars,
         "compiled_target_semantics": context.semantics.prompt_value(),
         "semantic_consistency": consistency_diagnostics(
             context.semantics, [result.prediction for result in results]
