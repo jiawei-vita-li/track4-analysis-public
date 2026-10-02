@@ -142,7 +142,9 @@ The largest R4 prompt is `t4-macrorev-20240930-us6` at 44,635 characters, 92.990
 
 The switch comparison produced byte-identical `answer.json` artifacts for every unit. The frozen R3 versions of those exact bytes passed current official scorer 5.2.2 smoke on Linux with `admissible=True` for all 11 units and zero known deterministic claim penalties. R4 therefore introduced no content-free, wrong-entity, unanchored, contradicted, over-cap, malformed, schema, roster, cutoff, or offset regression in the mock control.
 
-The full strong-baseline suite passes 99/99 under Python 3.13 with toolkit 2.5.1. The documentation/firewall selection passes 15/15, focused R4 tests pass 14/14, and Ruff lint plus changed-file formatting checks pass. Native Windows cannot execute the official secure no-follow corpus walk and is not counted as a Linux smoke pass.
+The full strong-baseline suite passes 99/99 under Python 3.13 with toolkit 2.5.1. The final documentation/firewall selection passes 18/18, focused R4 tests pass 14/14, and Ruff lint plus changed-file formatting checks pass. Native Windows cannot execute the official secure no-follow corpus walk and is not counted as a Linux smoke pass.
+
+GitHub Actions run [`36957230379`](https://github.com/jiawei-vita-li/track4-analysis-public/actions/runs/36957230379) independently exercised the frozen commit on Linux. Its toolkit-backed scorer/judge test job and lint/type-check job passed. The workflow's separate `Firewall` job stopped during test collection because that pre-existing job installs `pytest` but not the existing test dependency `jsonschema`; `baselines/strong_rag_baseline/tests/test_safety.py` therefore raised `ModuleNotFoundError` before any R4 test ran, and the dependent unit-validation job was skipped. This is recorded as a CI workflow dependency limitation, not as a fresh end-to-end smoke pass or an R4 code pass for the skipped jobs; changing the workflow is outside this experiment's A/B scope.
 
 ## 15. Known limitations
 
@@ -162,6 +164,6 @@ The R4 code must be frozen and its algorithm commit recorded before any new orga
 
 R4 algorithm commit: `15a09731c607d10c42202aae3e0b28f72de9e2a6`.
 
-The exact commit will replace this marker in a documentation-only freeze-record commit after all gates pass. No runtime code may change between the algorithm commit and that record.
+Documentation-only commits after that SHA record the freeze and external validation status. No runtime code changed after the algorithm commit.
 
 **NO PREDICTIVE QUALITY CLAIM**
