@@ -27,6 +27,13 @@ entity score must express the same compiled target quantity on one shared scale.
 A related passage is not necessarily support: prefer explicit measurements, guidance, trends,
 and comparisons that bear on the prediction."""
 
+_COMPARATIVE_INSTRUCTIONS = """\
+ Before assigning final predictions, compare the entities under the same compiled target semantics
+and use COMPARATIVE_CONTEXT to establish a shared task-level frame. Relative feature position is
+comparison evidence, not a forecast by itself. Never assume that a larger feature value implies a
+larger target unless the trusted task semantics explicitly state that relationship. For ranking,
+assign every entity score on one common target scale; never use independent local scales."""
+
 _FALLBACK_CLAIM_CHARS = 200
 
 
@@ -34,6 +41,14 @@ _FALLBACK_CLAIM_CHARS = 200
 class TaskPredictionRun:
     results: tuple[EntityResult, ...]
     trace: dict[str, Any]
+
+
+def task_system_prompt(*, comparative_context_enabled: bool) -> str:
+    return (
+        TASK_SYSTEM_PROMPT + _COMPARATIVE_INSTRUCTIONS
+        if comparative_context_enabled
+        else TASK_SYSTEM_PROMPT
+    )
 
 
 def _finite(value: object) -> float | None:
@@ -86,6 +101,8 @@ def build_task_prompt(
         ],
         "required_output": {"predictions": [prediction_shape]},
     }
+    if context.comparative_context is not None:
+        payload["comparative_context"] = context.comparative_context.prompt_value()
     if repair is not None:
         payload["repair"] = repair
     instructions = (
@@ -260,17 +277,24 @@ def run_task_prediction(
     raw_outputs: list[str] = []
     parse_failures: list[dict[str, Any]] = []
     batch_latencies: list[float] = []
+    prompt_chars: list[int] = []
     repair_used = False
     request_before = int(getattr(client, "request_count", 0))
 
     for batch_number, cards in enumerate(plan.batches, start=1):
         started = time.perf_counter()
         prompt = build_task_prompt(context, cards, include_evidence=include_evidence)
+        prompt_chars.append(len(prompt))
         raw = ""
         rows: list[dict[str, Any]] = []
         failures: list[str] = []
         try:
-            raw = client.complete(TASK_SYSTEM_PROMPT, prompt)
+            raw = client.complete(
+                task_system_prompt(
+                    comparative_context_enabled=context.comparative_context is not None
+                ),
+                prompt,
+            )
             raw_outputs.append(raw)
             rows = _rows_from_raw(raw, cards)
             failures = _row_failures(rows, cards, context)
@@ -291,7 +315,13 @@ def run_task_prediction(
                 },
             )
             try:
-                raw = client.complete(TASK_SYSTEM_PROMPT, repair_prompt)
+                raw = client.complete(
+                    task_system_prompt(
+                        comparative_context_enabled=context.comparative_context
+                        is not None
+                    ),
+                    repair_prompt,
+                )
                 raw_outputs.append(raw)
                 rows = _rows_from_raw(raw, cards)
                 failures = _row_failures(rows, cards, context)
@@ -314,6 +344,21 @@ def run_task_prediction(
         batch_latencies.append(round((time.perf_counter() - started) * 1000, 3))
 
     request_after = int(getattr(client, "request_count", request_before))
+    comparative_trace = (
+        context.comparative_context.trace_value()
+        if context.comparative_context is not None
+        else {
+            "comparative_context_version": "off",
+            "numeric_features_considered": [],
+            "numeric_features_compared": [],
+            "numeric_feature_summaries": [],
+            "numeric_features_skipped": [],
+            "skipped_feature_details": [],
+            "skip_reasons": {},
+            "per_entity_relative_features": {},
+            "comparison_count": 0,
+        }
+    )
     trace = {
         "target_type": context.target.get("type"),
         "batch_count": len(plan.batches),
@@ -325,9 +370,11 @@ def run_task_prediction(
         "raw_outputs": raw_outputs,
         "parse_failures": parse_failures,
         "batch_latency_ms": batch_latencies,
+        "prompt_chars": prompt_chars,
         "compiled_target_semantics": context.semantics.prompt_value(),
         "semantic_consistency": consistency_diagnostics(
             context.semantics, [result.prediction for result in results]
         ),
+        **comparative_trace,
     }
     return TaskPredictionRun(results=tuple(results), trace=trace)

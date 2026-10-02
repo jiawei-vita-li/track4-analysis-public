@@ -11,6 +11,7 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
+from .comparative_context import ComparativeContext, compile_comparative_context
 from .evidence_binding import retrieve_admissible, task_row_fallback
 from .indexer import Chunk, IndexedCorpus
 from .queries import build_queries
@@ -60,6 +61,7 @@ class TaskContext:
     cutoff_date: str
     interval_level: float
     semantics: TargetSemantics
+    comparative_context: ComparativeContext | None
     cards: tuple[EntityCard, ...]
 
     @property
@@ -88,6 +90,7 @@ def build_task_context(
     corpus: IndexedCorpus,
     *,
     evidence_per_entity: int,
+    comparative_context_enabled: bool = True,
 ) -> TaskContext:
     """Retrieve compact, cutoff-safe evidence cards for the trusted roster."""
     cards: list[EntityCard] = []
@@ -126,13 +129,20 @@ def build_task_context(
     target = task.get("target") if isinstance(task.get("target"), dict) else {}
     if task.get("target_type") is not None:
         target = {**target, "type": task["target_type"]}
+    semantics = compile_target_semantics(task)
+    entity_table = [{"entity_id": card.entity_id, **card.features} for card in cards]
     return TaskContext(
         task_id=str(task.get("task_id", "")),
         prompt=str(task.get("prompt", "")),
         target=dict(target),
         cutoff_date=str(task.get("cutoff_date", "")),
         interval_level=float(task.get("interval_level", 0.9)),
-        semantics=compile_target_semantics(task),
+        semantics=semantics,
+        comparative_context=(
+            compile_comparative_context(entity_table, semantics)
+            if comparative_context_enabled
+            else None
+        ),
         cards=tuple(cards),
     )
 
@@ -158,17 +168,18 @@ def plan_batches(
     If the plan would require more primary calls than allowed, remaining entities
     are deferred to the existing deterministic safety fallback.
     """
-    shared_chars = _json_chars(
-        {
-            "task_id": context.task_id,
-            "prompt": context.prompt,
-            "raw_target": context.target,
-            "compiled_target_semantics": context.semantics.prompt_value(),
-            "cutoff_date": context.cutoff_date,
-            "interval_level": context.interval_level,
-            "complete_entity_table": context.entity_table,
-        }
-    )
+    shared = {
+        "task_id": context.task_id,
+        "prompt": context.prompt,
+        "raw_target": context.target,
+        "compiled_target_semantics": context.semantics.prompt_value(),
+        "cutoff_date": context.cutoff_date,
+        "interval_level": context.interval_level,
+        "complete_entity_table": context.entity_table,
+    }
+    if context.comparative_context is not None:
+        shared["comparative_context"] = context.comparative_context.prompt_value()
+    shared_chars = _json_chars(shared)
     batches: list[tuple[EntityCard, ...]] = []
     estimates: list[int] = []
     deferred: list[str] = []

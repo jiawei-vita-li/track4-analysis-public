@@ -223,6 +223,7 @@ def run(
     batch_max_input_chars: int = 48_000,
     batch_max_output_chars: int = 12_000,
     max_primary_requests: int = 5,
+    comparative_context: bool = True,
 ) -> dict:
     task = json.loads(task_path.read_text(encoding="utf-8"))
     corpus = build_index(corpus_dir)
@@ -240,6 +241,7 @@ def run(
             index,
             corpus,
             evidence_per_entity=evidence_per_entity,
+            comparative_context_enabled=comparative_context,
         )
         plan = plan_batches(
             context,
@@ -356,6 +358,12 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Use a canned model reply (no network) — wiring smoke runs only.",
     )
+    parser.add_argument(
+        "--comparative-context",
+        choices=("on", "off"),
+        default="on",
+        help="Enable R4 deterministic cross-entity context; off reproduces R3 prompting.",
+    )
     args = parser.parse_args(argv)
 
     config = Config.from_env()
@@ -375,6 +383,7 @@ def main(argv: list[str] | None = None) -> int:
         batch_max_input_chars=config.batch_max_input_chars,
         batch_max_output_chars=config.batch_max_output_chars,
         max_primary_requests=config.max_primary_requests,
+        comparative_context=args.comparative_context == "on",
     )
     n_claims = sum(len(e["claims"]) for e in answer["entity_predictions"])
     print(
