@@ -1,4 +1,4 @@
-name: RC2 frozen release candidates
+name: RC2 R4.1 release candidate
 
 on:
   workflow_dispatch:
@@ -16,13 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: r3-control
-            source: 3f762ed1a53252417a2d53de11cf07cc5b003df4
-            tag: r3-3f762ed1
-            comparative: absent
-          - name: r4-treatment
-            source: 15a09731c607d10c42202aae3e0b28f72de9e2a6
-            tag: r4-15a09731
+          - name: r4-1-treatment
+            source: 80961b68768154ba05cbd6ba00f38e3e04a7b495
+            tag: r4-1-80961b6
             comparative: "on"
     env:
       IMAGE_REF: ghcr.io/jiawei-vita-li/agenthon-track4-agent
@@ -42,6 +38,13 @@ jobs:
           repository: Agenthon-2026/track4-analysis-public
           ref: ede7381d8c1ba9d8c84068f9d142f5e093a33892
           path: official
+          fetch-depth: 1
+
+      - name: Check out frozen R4-v1 answer control
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 15a09731c607d10c42202aae3e0b28f72de9e2a6
+          path: r4v1
           fetch-depth: 1
 
       - name: Check out pinned official toolkit
@@ -69,6 +72,10 @@ jobs:
           assert SCORER_VERSION == "5.2.2"
           print("toolkit=2.5.1 scorer=5.2.2")
           PY
+
+      - name: Run complete baseline tests on Linux
+        working-directory: candidate
+        run: python -m pytest baselines/tests baselines/strong_rag_baseline/tests -q
 
       - name: Verify immutable source and experiment invariant
         shell: bash
@@ -279,6 +286,101 @@ jobs:
           PY
           echo "schema_roster_cutoff_citations_claims=PASS" >> evidence/provenance.txt
 
+      - name: Run and compare all 11 public mock units
+        shell: bash
+        run: |
+          set -euo pipefail
+          digest=$(cat evidence/digest.txt)
+          image="$IMAGE_REF@$digest"
+          mkdir -p outputs/public controls/r4v1
+          unit_count=0
+
+          for unit_dir in official/units/t4-*; do
+            [[ -f "$unit_dir/task.json" && -d "$unit_dir/corpus" ]] || continue
+            unit=$(basename "$unit_dir")
+            unit_count=$((unit_count + 1))
+            output="$PWD/outputs/public/$unit"
+            control="$PWD/controls/r4v1/$unit"
+            mkdir -p "$output" "$control"
+            chmod 777 "$output"
+
+            docker run --rm --network=none \
+              -v "$PWD/$unit_dir:/input:ro" \
+              -v "$output:/output" \
+              "$image" \
+              analyze --task /input/task.json --corpus /input/corpus/ \
+              --out /output/answer.json --trace /output/trace.json --mock \
+              > "$output/container.log" 2>&1
+
+            PYTHONPATH="$PWD/r4v1" python -m baselines.strong_rag_baseline.cli \
+              analyze --task "$PWD/$unit_dir/task.json" --corpus "$PWD/$unit_dir/corpus" \
+              --out "$control/answer.json" --trace "$control/trace.json" --mock \
+              > "$control/run.log" 2>&1
+
+            cmp "$output/answer.json" "$control/answer.json"
+            PYTHONPATH="$PWD/official" qfbench2-smoke "$PWD/$unit_dir" "$output" \
+              --track analysis --profile smoke | tee "$output/official-smoke.txt"
+            grep -q 'admissible=True' "$output/official-smoke.txt"
+          done
+          test "$unit_count" = 11
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          rows = []
+          for trace_path in sorted(Path("outputs/public").glob("*/trace.json")):
+              trace = json.loads(trace_path.read_text(encoding="utf-8"))
+              task = trace["task_prediction"]
+              rows.append({
+                  "unit": trace_path.parent.name,
+                  "requests": trace["request_count"],
+                  "batch_sizes": task["entities_per_batch"],
+                  "request_chars": task["request_chars"],
+                  "planned_actual_prompt_chars": task["planned_actual_prompt_chars"],
+                  "parse_failures": len(task["parse_failures"]),
+                  "prompt_guard_failures": len(task["prompt_guard_failures"]),
+                  "repairs": int(task["repair_used"]),
+                  "deferred": len(task["deferred_entity_ids"]),
+                  "fallbacks": sum(
+                      bool(entity.get("fallback_used"))
+                      for entity in trace["entities"]
+                  ),
+              })
+          summary = {
+              "units": len(rows),
+              "requests": sum(row["requests"] for row in rows),
+              "batches": sum(len(row["batch_sizes"]) for row in rows),
+              "total_request_chars": sum(
+                  sum(row["request_chars"]) for row in rows
+              ),
+              "max_request_chars": max(
+                  max(row["request_chars"]) for row in rows
+              ),
+              "parse_failures": sum(row["parse_failures"] for row in rows),
+              "prompt_guard_failures": sum(
+                  row["prompt_guard_failures"] for row in rows
+              ),
+              "repairs": sum(row["repairs"] for row in rows),
+              "deferred": sum(row["deferred"] for row in rows),
+              "fallbacks": sum(row["fallbacks"] for row in rows),
+              "answers_byte_identical_to_r4v1": True,
+          }
+          Path("evidence/public-mock-summary.json").write_text(
+              json.dumps({"summary": summary, "units": rows}, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          assert summary["units"] == 11
+          assert summary["requests"] == 11
+          assert summary["max_request_chars"] <= 48_000
+          assert not summary["parse_failures"]
+          assert not summary["prompt_guard_failures"]
+          assert not summary["repairs"]
+          assert not summary["deferred"]
+          print(json.dumps(summary, indent=2))
+          PY
+          echo "public_11_mock_and_r4v1_byte_comparison=PASS" >> evidence/provenance.txt
+
       - name: Upload non-secret release evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -291,5 +393,6 @@ jobs:
             outputs/*/official-smoke.txt
             outputs/*/manifest.txt
             outputs/*/container.log
+            outputs/public/**
           if-no-files-found: warn
           retention-days: 14
