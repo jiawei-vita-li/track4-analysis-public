@@ -1,0 +1,26 @@
+{
+  "category": "api",
+  "competition_id": "agenthon2026-analysis-dev",
+  "descriptor_digest": "sha256:ab4e3d739b16a9a90d3cfbc0765432b8d658c8205f4b0f780b92b1704a85b7f5",
+  "image": {
+    "digest": "sha256:9a758b364eddf00a7634228a1d5d8f8ff74150c7b12a1eacf0652f995a25a11d",
+    "registry": "ghcr.io",
+    "repository": "jiawei-vita-li/agenthon-track4-agent"
+  },
+  "image_access": "public",
+  "interface_version": "2.0",
+  "license": "Apache-2.0",
+  "models": [
+    {
+      "access": "api",
+      "name": "nvidia/nemotron-3-super-120b-a12b",
+      "revision": "rl-030326-fp8",
+      "training_cutoff": "unpublished",
+      "version": "rl-030326-fp8"
+    }
+  ],
+  "phase": "dev",
+  "schema_version": "1.0.0",
+  "team_id": "team-a5feec08147ef9378eebcdbd1b1ad1c2",
+  "track": "analysis"
+}
